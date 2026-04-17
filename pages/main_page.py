@@ -1,4 +1,3 @@
-import re
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
@@ -44,7 +43,7 @@ class MainPage(BasePage):
                     categories.append(text)
             return categories
     
-    def click_category(self, category_name: str):
+    def click_category(self, category_name: str) -> None:
         """Клик по категории в навигационной панели."""
         with allure.step(f"Кликаем по категории: {category_name}"):
             categories = self.get_navbar_items()
@@ -62,7 +61,6 @@ class MainPage(BasePage):
         categories = self.get_navbar_items()
         data = {}
         
-        names = [item.text.strip().upper() for item in categories]
         for item in categories:
             name = item.text.strip().upper()
             if name and name != 'HOME':

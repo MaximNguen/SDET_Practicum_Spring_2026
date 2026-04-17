@@ -30,6 +30,11 @@ def main_page(page_factory):
     return page_factory.get_main_page()
 
 @pytest.fixture
+def items_page(page_factory):
+    """Фикстура для страницы товаров."""
+    return page_factory.get_items_page()
+
+@pytest.fixture
 def fresh_main_page(page_factory):
     """Фикстура для новой (сброшенной) главной страницы."""
     page_factory.reset()

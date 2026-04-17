@@ -5,19 +5,20 @@ import random
 from data.urls import main_page_url
 from data.expected_data import expected_categories
 from data.mock_data import random_category
+from pages.items_page import ItemPage
 
 @allure.epic("UI Тесты")
-@allure.feature("Позитивные тест-кейсы")
+@allure.feature("Тест-кейсы на наличие элементов и их работоспособность")
 class TestPositiveResult:
     """Позитивные тест-кейсы для проверки работоспособности элементов сайта."""
 
     @classmethod
     def setup_class(cls):
-        print("\n========= Начало выполнения позитивного тест-кейса ==========")
+        print("\n========= Начало выполнения тест-кейсов на наличие элементов ==========")
 
     @classmethod
     def teardown_class(cls):
-        print("========= Конец выполнения позитивного тест-кейса ==========")
+        print("\n========= Конец выполнения тест-кейсов на наличие элементов ==========")
 
     @pytest.fixture(autouse=True)
     def setup(self, main_page, url=main_page_url):
@@ -63,3 +64,25 @@ class TestPositiveResult:
                     f"Клик по категории '{category}' не привел к переходу"
                 
                 self.main_page.open(main_page_url)
+                
+    @allure.story("Проверка наличия товаров на странице категории")
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_category_products(self, items_page):
+        """Проверка наличия товаров на странице категории."""
+        category = random.choice(random_category)
+        with allure.step(f"Проверяем наличие товаров в категории: {category}"):
+            self.main_page.click_category(category)
+            products_data = items_page.get_products_data()
+            assert products_data, f"На странице категории '{category}' не найдено товаров."
+            
+    @allure.story("Проверка кликабельности сортировки товаров")
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_sorting_products(self, items_page):
+        """Проверка кликабельности сортировки товаров."""
+        category = random.choice(random_category)
+        with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+            self.main_page.click_category(category)
+            items_page.select_filter_option("Price Low > High")
+            products_data = items_page.get_products_data()
+            prices = [float(price.replace('$', '')) for price in products_data.values()]
+            assert prices == sorted(prices), "Товары не отсортированы по цене."
