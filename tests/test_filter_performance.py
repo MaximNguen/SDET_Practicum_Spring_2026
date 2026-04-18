@@ -57,7 +57,7 @@ class TestFilterPerformance:
             
     @allure.story("Проверка сортировки товаров по цене от дешевых к дорогим")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_check_filter_sorting_low_to_high(self):
+    def test_check_filter_sorting_price_asc(self):
         """Проверка сортировки товаров по цене от дешевых к дорогим."""
         categories = self.main_page.get_navbar_items()
         for category in categories:
@@ -72,5 +72,24 @@ class TestFilterPerformance:
                     f"Клик по категории '{category}' не привел к переходу"
                 assert cards, f"На странице категории '{category}' не найдено товаров."
                 assert products_data == sorted(products_data), f"Товары в категории '{category}' не отсортированы по цене от дешевых к дорогим."
+                
+                self.main_page.open(main_page_url)
+                
+    @allure.story("Проверка сортировка товаров по цене от дорогих к дешевым")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_check_filter_sorting_price_desc(self):
+        categories = self.main_page.get_navbar_items()
+        for category in categories:
+            with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+                self.main_page.click_category(category)
+                cards = self.items_page.get_products_cards()
+                self.items_page.select_filter_option("Price High > Low")
+                products_data = self.items_page.get_products_prices()
+                current_url = self.main_page.driver.current_url
+                
+                assert current_url != main_page_url, \
+                    f"Клик по категории '{category}' не привел к переходу"
+                assert cards, f"На странице категории '{category}' не найдено товаров."
+                assert products_data == sorted(products_data, reverse=True), f"Товары в категории '{category}' не отсортированы по цене от дешевых к дорогим."
                 
                 self.main_page.open(main_page_url)
