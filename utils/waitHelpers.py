@@ -30,3 +30,25 @@ class WaitHelpers:
         except TimeoutException:
             print(f"Элемент с локатором {locator} не кликабельный в течение {timeout} секунд.")
             return None
+        
+    def wait_until_url_change(self, timeout=10):
+        """Метод ожидания изменения URL"""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.url_changes(self.driver.current_url)
+            )
+            return True
+        except TimeoutException:
+            print(f"URL не изменился в течение {timeout} секунд.")
+            return False
+        
+    def wait_for_page_load(self, timeout=10):
+        """Ожидание полной загрузки страницы."""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                lambda driver: driver.execute_script("return document.readyState") == "complete"
+            )
+            return True
+        except TimeoutException:
+            print(f"Страница не загрузилась за {timeout} секунд.")
+            return False

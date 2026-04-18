@@ -12,6 +12,9 @@ class PageFactory:
         self.driver = driver
         self.main_page = None
         self.items_page = None
+        self.search_page = None
+        self.product_page = None
+        self.cart_page = None
     
     def get_main_page(self, refresh: bool = False) -> object:
         """Получить экземпляр главной страницы."""
@@ -31,8 +34,33 @@ class PageFactory:
         
         return self.items_page
     
+    def get_search_page(self, refresh: bool = False) -> object:
+        """Получить экземпляр страницы поиска."""
+        if refresh or self.search_page is None:
+            with allure.step("Создаем экземпляр страницы поиска"):
+                from pages.search_page import SearchPage
+                self.search_page = SearchPage(self.driver)
+        return self.search_page
+    
+    def get_product_page(self, refresh: bool = False) -> object:
+        """Получить экземпляр страницы товара."""
+        if refresh or self.product_page is None:
+            with allure.step("Создаем экземпляр страницы товара"):
+                from pages.product_page import ProductPage
+                self.product_page = ProductPage(self.driver)
+        return self.product_page
+    
+    def get_cart_page(self, refresh: bool = False) -> object:
+        """Получить экземпляр страницы корзины."""
+        if refresh or self.cart_page is None:
+            with allure.step("Создаем экземпляр страницы корзины"):
+                from pages.cart_page import CartPage
+                self.cart_page = CartPage(self.driver)
+        return self.cart_page
+    
     def reset(self):
         """Сбросить состояние страницы (очистить кэш)."""
         with allure.step("Сбрасываем состояние страницы"):
             self.main_page = None
             self.items_page = None
+            self.search_page = None

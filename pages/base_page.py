@@ -1,3 +1,4 @@
+from selenium.webdriver import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from typing import List
 import allure
@@ -33,14 +34,13 @@ class BasePage:
             self.wait.wait_for_element(locator)
             return self.driver.find_elements(*locator)
     
-    def input_text(self, locator: tuple, text: str):
+    def input_text(self, element: WebElement, text: str):
         """Ввести текст в поле"""
-        with allure.step(f"Вводим текст '{text}' в элемент с локатором: {locator}"):
-            self.wait.wait_for_element(locator)
-            element = self.find_element(locator)
+        with allure.step(f"Вводим текст '{text}' в элемент с элементом: {element}"):
             element.clear()
-            self.wait.wait_for_clickable(locator)
+            self.wait.wait_for_clickable(element)
             element.send_keys(text)
+            element.send_keys(Keys.ENTER)
         
     def get_text(self, locator: tuple, timeout: int = None) -> str:
         """Получить текст элемента"""
@@ -65,3 +65,10 @@ class BasePage:
         """Открыть главную страницу по URL."""
         with allure.step(f"Открываем главную страницу по URL: {url}"):
             self.driver.get(url)
+            
+    def go_back_page(self) -> None:
+        """Вернуться на предыдущую страницу."""
+        with allure.step("Возвращаемся на предыдущую страницу"):
+            self.driver.back()
+            self.wait.wait_until_url_change()
+            self.wait.wait_for_page_load()

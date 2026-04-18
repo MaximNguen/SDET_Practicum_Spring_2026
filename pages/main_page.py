@@ -5,6 +5,7 @@ from typing import List
 
 from pages.base_page import BasePage
 from data.locators_main import MainPageLocators as MPL
+from data.mock_data import search_value
 
 class MainPage(BasePage):
     """
@@ -39,6 +40,29 @@ class MainPage(BasePage):
         with allure.step(f"Кликаем по категории: {category_name}"):
             category_element = self._find_category_by_name(category_name)
             category_element.click()
+            self.wait.wait_until_url_change()
+            
+    def get_search_input(self):
+        """Получить элемент поля поиска на главной странице."""
+        with allure.step("Получаем элемент поля поиска на главной странице"):
+            search_input = self.find_element(*MPL.search_input)
+            self.scroll(search_input)
+            return search_input
+        
+    def enter_search_value(self, element: WebElement) -> None:
+        """Ввести значение в поле поиска."""    
+        with allure.step(f"Вводим значение '{search_value}' в поле поиска"):
+            self.input_text(element, text=search_value)
+            
+    def go_to_cart_page(self):
+        """Перейти на страницу корзины."""
+        with allure.step("Переходим на страницу корзины"):
+            cart_button = self.find_element(*MPL.cart_button)
+            self.scroll(cart_button)
+            cart_button.click()
+            self.wait.wait_until_url_change()
+            self.wait.wait_for_page_load()
+
     
     def _get_category_elements(self) -> List[WebElement]:
         """

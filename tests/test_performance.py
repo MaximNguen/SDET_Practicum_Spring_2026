@@ -32,6 +32,12 @@ class TestPositiveResult:
     def test_get_navbar(self):
         nav = self.main_page.get_navbar()
         assert nav.is_displayed(), f"Не отображается панель навигационная"
+        
+    @allure.story("Проверка наличия поля ввода поиска на главной странице")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_get_search_input(self):
+        search_input = self.main_page.get_search_input()
+        assert search_input.is_displayed(), f"Не отображается поле ввода поиска на главной странице"
 
     @allure.story("Проверка наличия фильтра товаров")
     @allure.severity(allure.severity_level.NORMAL)

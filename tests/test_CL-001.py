@@ -5,7 +5,7 @@ import random
 from data.urls import main_page_url
 from data.expected_data import expected_categories
 
-@allure.epic("Проверка производительности фильтра товаров")
+@allure.epic("Выполнение Чек-листа 001 - Проверка фильтра товаров")
 @allure.feature("Тест-кейсы для проверки производительности фильтра товаров")
 class TestFilterPerformance:
     """Тест-кейсы для проверки производительности фильтра товаров."""

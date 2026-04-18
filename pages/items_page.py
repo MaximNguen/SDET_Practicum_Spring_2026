@@ -1,6 +1,5 @@
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.common.by import By
 import allure
 from typing import List
 

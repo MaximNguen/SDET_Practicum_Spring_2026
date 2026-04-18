@@ -35,6 +35,21 @@ def items_page(page_factory):
     return page_factory.get_items_page()
 
 @pytest.fixture
+def search_page(page_factory):
+    """Фикстура для страницы поиска."""
+    return page_factory.get_search_page()
+
+@pytest.fixture
+def product_page(page_factory):
+    """Фикстура для страницы товара."""
+    return page_factory.get_product_page()
+
+@pytest.fixture
+def cart_page(page_factory):
+    """Фикстура для страницы корзины."""
+    return page_factory.get_cart_page()
+
+@pytest.fixture
 def fresh_main_page(page_factory):
     """Фикстура для новой (сброшенной) главной страницы."""
     page_factory.reset()
