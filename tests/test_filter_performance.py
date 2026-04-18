@@ -75,7 +75,7 @@ class TestFilterPerformance:
                 
                 self.main_page.open(main_page_url)
                 
-    @allure.story("Проверка сортировка товаров по цене от дорогих к дешевым")
+    @allure.story("Проверка сортировки товаров по цене от дорогих к дешевым")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_filter_sorting_price_desc(self):
         categories = self.main_page.get_navbar_items()
@@ -90,6 +90,43 @@ class TestFilterPerformance:
                 assert current_url != main_page_url, \
                     f"Клик по категории '{category}' не привел к переходу"
                 assert cards, f"На странице категории '{category}' не найдено товаров."
-                assert products_data == sorted(products_data, reverse=True), f"Товары в категории '{category}' не отсортированы по цене от дешевых к дорогим."
+                assert products_data == sorted(products_data, reverse=True), f"Товары в категории '{category}' не отсортированы по цене от дорогих к дешевым."
                 
+                self.main_page.open(main_page_url)
+                
+    @allure.story("Проверка сортировки товаров по названию от A до Z")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_check_filter_sorting_name_asc(self):
+        categories = self.main_page.get_navbar_items()
+        for category in categories:
+            with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+                self.main_page.click_category(category)
+                cards = self.items_page.get_products_cards()
+                self.items_page.select_filter_option("Name A - Z")
+                products_data = self.items_page.get_products_names()
+                current_url = self.main_page.driver.current_url
+                
+                assert current_url != main_page_url, \
+                    f"Клик по категории '{category}' не привел к переходу"
+                assert cards, f"На странице категории '{category}' не найдено товаров."
+                assert products_data == sorted(products_data), f"Товары в категории '{category}' не отсортированы по названию от A до Z."
+                
+                self.main_page.open(main_page_url)
+                
+    @allure.story("Проверка сортировки товаров по названию от Z до A")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_check_filter_sorting_name_desc(self):
+        categories = self.main_page.get_navbar_items()
+        for category in categories:
+            with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+                self.main_page.click_category(category)
+                cards = self.items_page.get_products_cards()
+                self.items_page.select_filter_option("Name Z - A")
+                products_data = self.items_page.get_products_names()
+                current_url = self.main_page.driver.current_url
+                
+                assert current_url != main_page_url, \
+                    f"Клик по категории '{category}' не привел к переходу"
+                assert cards, f"На странице категории '{category}' не найдено товаров."
+                assert products_data == sorted(products_data, reverse=True), f"Товары в категории '{category}' не отсортированы по названию от Z до A."
                 self.main_page.open(main_page_url)
