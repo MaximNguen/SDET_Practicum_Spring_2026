@@ -38,8 +38,9 @@ class TestCartDeleteFunctionality:
         )
 
         added_products = []
-        for _ in range(products_count):
-            self.main_page.open(main_page_url)
+        for index in range(products_count):
+            if index > 0:
+                self.main_page.open(main_page_url)
             card, product_name = self.main_page.get_random_product_card(excluded_product_names=added_products)
             self.main_page.open_product_page_from_card(card)
 

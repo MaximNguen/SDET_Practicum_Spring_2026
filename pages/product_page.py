@@ -36,15 +36,15 @@ class ProductPage(BasePage):
     def has_radio_options(self) -> bool:
         """Проверить, есть ли на странице radio-options."""
         with allure.step("Проверяем наличие radio-options на странице товара"):
-            radio_buttons = self.driver.find_elements(*PPL.option_radio_buttons)
-            return len(radio_buttons) > 0
+            return bool(
+                self.driver.execute_script(
+                    "return document.querySelectorAll(\"input[type='radio'][name^='option']\").length;"
+                )
+            )
 
     def select_first_available_radio_option(self) -> bool:
         """Выбрать первый доступный radio-option на странице товара, если он есть."""
-        with allure.step("Проверяем наличие radio-option и выбираем первый доступный"):
-            if not self.has_radio_options():
-                return False
-
+        with allure.step("Выбираем первый доступный radio-option"):
             radio_buttons = self.driver.find_elements(*PPL.option_radio_buttons)
 
             for radio in radio_buttons:

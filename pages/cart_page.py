@@ -2,6 +2,9 @@ from selenium.webdriver.remote.webelement import WebElement
 import allure
 from typing import List
 import re
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 from data.locators_cart import CartPageLocators as CPL
 from pages.base_page import BasePage
@@ -14,6 +17,15 @@ class CartPage(BasePage):
     
     def __init__(self, driver):
         super().__init__(driver)
+
+    def _parse_money_value(self, text: str) -> float:
+        """Преобразовать денежный текст в float."""
+        cleaned = text.strip().replace('$', '').replace(' ', '')
+        cleaned = cleaned.replace(',', '')
+        match = re.search(r"-?\d+(?:\.\d+)?", cleaned)
+        if not match:
+            raise ValueError(f"Не удалось распарсить денежное значение: {text}")
+        return float(match.group(0))
         
     def get_table_cart(self) -> WebElement:
         """Получить элемент таблицы корзины."""
@@ -45,10 +57,10 @@ class CartPage(BasePage):
                 price_element = item.find_element(*CPL.unit_price)
                 quantity_value = item.find_element(*CPL.quantity_input).get_attribute('value')
                 self.scroll(price_element)
-                price_text = price_element.text.strip().replace('$', '')
+                price_text = price_element.text.strip()
 
                 try:
-                    price = float(price_text)
+                    price = self._parse_money_value(price_text)
                 except ValueError:
                     continue
 
@@ -65,13 +77,8 @@ class CartPage(BasePage):
         with allure.step("Получаем общую стоимость товаров в корзине"):
             total_element = self.find_element(*CPL.total_price)
             self.scroll(total_element)
-            total_text = total_element.text.strip().replace(',', '.')
-            match = re.search(r"\d+(?:\.\d+)?", total_text)
-            if not match:
-                return None
-
             try:
-                total_price = float(match.group(0))
+                total_price = self._parse_money_value(total_element.text)
                 return total_price
             except ValueError:
                 return None
@@ -123,11 +130,13 @@ class CartPage(BasePage):
             if not remove_buttons:
                 raise ValueError(f"Кнопка удаления не найдена для товара с номером {position}")
 
-            previous_url = self.driver.current_url
             self.scroll(remove_buttons[0])
             remove_buttons[0].click()
-            self.wait.wait_until_url_change(previous_url=previous_url)
-            self.wait.wait_for_page_load()
+
+            try:
+                WebDriverWait(self.driver, 4).until(EC.staleness_of(row))
+            except TimeoutException:
+                self.wait.wait_for_page_load(timeout=2)
 
     def remove_even_items_by_order(self) -> int:
         """Удалить из корзины все товары с четными порядковыми номерами."""
