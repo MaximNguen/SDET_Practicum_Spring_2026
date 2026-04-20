@@ -1,8 +1,6 @@
 from selenium.webdriver.remote.webelement import WebElement
 import allure
 from typing import List
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 from data.locators_cart import CartPageLocators as CPL
@@ -140,7 +138,7 @@ class CartPage(BasePage):
             remove_buttons[0].click()
 
             try:
-                WebDriverWait(self.driver, 4).until(EC.staleness_of(row))
+                self.wait.wait_until_staleness_of(row)
             except TimeoutException:
                 self.wait.wait_for_page_load(timeout=2)
 

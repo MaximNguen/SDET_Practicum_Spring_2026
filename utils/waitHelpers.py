@@ -58,3 +58,12 @@ class WaitHelpers:
         except TimeoutException:
             print(f"Страница не загрузилась за {timeout} секунд.")
             return False
+
+    def wait_until_staleness_of(self, element, timeout=4):
+        """Ожидание устаревания элемента."""
+        try:
+            WebDriverWait(self.driver, timeout).until(EC.staleness_of(element))
+            return True
+        except TimeoutException:
+            print(f"Элемент не устарел в течение {timeout} секунд.")
+            return False
