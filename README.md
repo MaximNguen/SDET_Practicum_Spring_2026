@@ -2,7 +2,7 @@
 <h2>Решение ТЗ первой недели практикума от SimbirSoft</h2>
 <h3>Что использовалось и реализованно?</h3>
 <ul>
-    <li>Язык - Python 3.14</li>
+    <li>Язык - Python 3.10</li>
     <li>Инструменты - Selenium, Pytest, Pytest-Xdist, Allure</li>
     <li>Паттерны проектирования - Page Object Model, Page Factory</li>
 </ul>
