@@ -21,6 +21,16 @@ def driver():
     yield driver
 
     driver.quit()
+    
+@pytest.fixture(scope="class", autouse=True)
+def class_execution_messages(request):
+    """Печать сообщений о начале и завершении выполнения тест-класса."""
+
+    print(f"\n========= Начало ==========")
+
+    yield
+
+    print(f"\n========= Конец ==========")
 
 
 @pytest.fixture

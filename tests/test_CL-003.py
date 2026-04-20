@@ -9,18 +9,6 @@ from data.urls import main_page_url
 class TestCartDeleteFunctionality:
     """Тест-кейсы для проверки удаления четных по порядку товаров из корзины."""
 
-    @classmethod
-    def setup_class(cls):
-        print(
-            "\n========= Начало выполнения тест-кейсов на удаление товаров из корзины =========="
-        )
-
-    @classmethod
-    def teardown_class(cls):
-        print(
-            "\n========= Конец выполнения тест-кейсов на удаление товаров из корзины =========="
-        )
-
     @pytest.fixture(autouse=True)
     def setup(self, main_page, product_page, cart_page, url=main_page_url):
         self.main_page = main_page

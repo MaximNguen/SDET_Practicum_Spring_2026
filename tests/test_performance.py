@@ -12,14 +12,6 @@ from data.mock_data import random_category
 class TestPositiveResult:
     """Позитивные тест-кейсы для проверки работоспособности элементов сайта."""
 
-    @classmethod
-    def setup_class(cls):
-        print("\n========= Начало выполнения тест-кейсов на наличие элементов ==========")
-
-    @classmethod
-    def teardown_class(cls):
-        print("\n========= Конец выполнения тест-кейсов на наличие элементов ==========")
-
     @pytest.fixture(autouse=True)
     def setup(self, main_page, items_page, url=main_page_url):
         self.main_page = main_page

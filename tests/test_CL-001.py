@@ -11,18 +11,6 @@ from data.expected_data import expected_categories
 class TestFilterPerformance:
     """Тест-кейсы для проверки производительности фильтра товаров."""
 
-    @classmethod
-    def setup_class(cls):
-        print(
-            "\n========= Начало выполнения тест-кейсов на производительность фильтра товаров =========="
-        )
-
-    @classmethod
-    def teardown_class(cls):
-        print(
-            "\n========= Конец выполнения тест-кейсов на производительность фильтра товаров =========="
-        )
-
     @pytest.fixture(autouse=True)
     def setup(self, main_page, items_page, url=main_page_url):
         self.main_page = main_page
