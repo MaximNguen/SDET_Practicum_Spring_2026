@@ -29,34 +29,27 @@ def page_factory(driver):
 @pytest.fixture
 def main_page(page_factory):
     """Фикстура для главной страницы."""
-    return page_factory.get_main_page()
+    return page_factory.main_page
 
 @pytest.fixture
 def items_page(page_factory):
     """Фикстура для страницы товаров."""
-    return page_factory.get_items_page()
+    return page_factory.items_page
 
 @pytest.fixture
 def search_page(page_factory):
     """Фикстура для страницы поиска."""
-    return page_factory.get_search_page()
+    return page_factory.search_page
 
 @pytest.fixture
 def product_page(page_factory):
     """Фикстура для страницы товара."""
-    return page_factory.get_product_page()
+    return page_factory.product_page
 
 @pytest.fixture
 def cart_page(page_factory):
     """Фикстура для страницы корзины."""
-    return page_factory.get_cart_page()
-
-@pytest.fixture
-def fresh_main_page(page_factory):
-    """Фикстура для новой (сброшенной) главной страницы."""
-    page_factory.reset()
-    return page_factory.get_main_page()
-
+    return page_factory.cart_page
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
