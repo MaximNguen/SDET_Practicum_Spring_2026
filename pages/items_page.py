@@ -47,7 +47,7 @@ class ItemPage(BasePage):
                 except:
                     price_element = card.find_element(*IPL.price_product_new)
                     self.scroll(price_element)
-                price_text = price_element.text.strip().replace('$', '')
+                price_text = self.get_text_from_element(price_element).replace('$', '')
                 try:
                     price = float(price_text)
                     prices.append(price)
@@ -61,8 +61,7 @@ class ItemPage(BasePage):
             cards = self.get_products_cards()
             names = []
             for card in cards:
-                name_element = card.find_element(*IPL.name_product)
-                name_text = name_element.text.strip()
+                name_text = self.get_text_from_child(card, *IPL.name_product)
                 if name_text:
                     names.append(name_text)
             return names

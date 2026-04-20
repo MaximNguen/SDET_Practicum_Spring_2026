@@ -34,7 +34,7 @@ class TestFilterPerformance:
         for category in categories:
             with allure.step(f"Проверяем наличие товаров в категории: {category}"):
                 self.main_page.click_category(category)
-                current_url = self.main_page.driver.current_url
+                current_url = self.main_page.get_current_url()
                 assert current_url != main_page_url, \
                     f"Клик по категории '{category}' не привел к переходу"
                 products_data = self.items_page.get_products_names()
@@ -48,7 +48,7 @@ class TestFilterPerformance:
         category = random.choice(expected_categories)
         with allure.step("Переходим на страницу 1 из категорий"):
             self.main_page.click_category(category)
-            current_url = self.main_page.driver.current_url
+            current_url = self.main_page.get_current_url()
             assert current_url != main_page_url, \
                 f"Клик по категории '{category}' не привел к переходу"
         with allure.step(f"Проверяем наличие сортировку товаров в категории: {category}"):
@@ -66,7 +66,7 @@ class TestFilterPerformance:
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Price Low > High")
                 products_data = self.items_page.get_products_prices()
-                current_url = self.main_page.driver.current_url
+                current_url = self.main_page.get_current_url()
                 
                 assert current_url != main_page_url, \
                     f"Клик по категории '{category}' не привел к переходу"
@@ -85,7 +85,7 @@ class TestFilterPerformance:
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Price High > Low")
                 products_data = self.items_page.get_products_prices()
-                current_url = self.main_page.driver.current_url
+                current_url = self.main_page.get_current_url()
                 
                 assert current_url != main_page_url, \
                     f"Клик по категории '{category}' не привел к переходу"
@@ -104,7 +104,7 @@ class TestFilterPerformance:
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Name A - Z")
                 products_data = self.items_page.get_products_names()
-                current_url = self.main_page.driver.current_url
+                current_url = self.main_page.get_current_url()
                 
                 assert current_url != main_page_url, \
                     f"Клик по категории '{category}' не привел к переходу"
@@ -123,7 +123,7 @@ class TestFilterPerformance:
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Name Z - A")
                 products_data = self.items_page.get_products_names()
-                current_url = self.main_page.driver.current_url
+                current_url = self.main_page.get_current_url()
                 
                 assert current_url != main_page_url, \
                     f"Клик по категории '{category}' не привел к переходу"

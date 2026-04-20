@@ -1,13 +1,13 @@
 from selenium.webdriver.remote.webelement import WebElement
 import allure
 from typing import List
-import re
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 from data.locators_cart import CartPageLocators as CPL
 from pages.base_page import BasePage
+from utils.stringUtils import StringUtils as SU
 
 class CartPage(BasePage):
     """
@@ -17,15 +17,6 @@ class CartPage(BasePage):
     
     def __init__(self, driver):
         super().__init__(driver)
-
-    def _parse_money_value(self, text: str) -> float:
-        """Преобразовать денежный текст в float."""
-        cleaned = text.strip().replace('$', '').replace(' ', '')
-        cleaned = cleaned.replace(',', '')
-        match = re.search(r"-?\d+(?:\.\d+)?", cleaned)
-        if not match:
-            raise ValueError(f"Не удалось распарсить денежное значение: {text}")
-        return float(match.group(0))
         
     def get_table_cart(self) -> WebElement:
         """Получить элемент таблицы корзины."""
@@ -53,14 +44,16 @@ class CartPage(BasePage):
             items = self.get_cart_items()
             cart_data = []
             for item in items:
-                name = item.find_element(*CPL.name_product).text.strip()
-                price_element = item.find_element(*CPL.unit_price)
-                quantity_value = item.find_element(*CPL.quantity_input).get_attribute('value')
-                self.scroll(price_element)
-                price_text = price_element.text.strip()
+                name = self.get_text_from_child(item, *CPL.name_product)
+                quantity_value = self.get_attribute_from_child(
+                    item,
+                    *CPL.quantity_input,
+                    attribute='value',
+                )
+                price_text = self.get_text_from_child(item, *CPL.unit_price)
 
                 try:
-                    price = self._parse_money_value(price_text)
+                    price = SU._parse_money_value(price_text)
                 except ValueError:
                     continue
 
@@ -78,7 +71,7 @@ class CartPage(BasePage):
             total_element = self.find_element(*CPL.total_price)
             self.scroll(total_element)
             try:
-                total_price = self._parse_money_value(total_element.text)
+                total_price = SU._parse_money_value(total_element.text)
                 return total_price
             except ValueError:
                 return None
@@ -98,7 +91,7 @@ class CartPage(BasePage):
             lowest_price_item = self.get_lowest_price_item()
             items = self.get_cart_items()
             for item in items:
-                name = item.find_element(*CPL.name_product).text.strip()
+                name = self.get_text_from_child(item, *CPL.name_product)
                 if name == lowest_price_item['name']:
                     quantity_input = item.find_element(*CPL.quantity_input)
                     self.scroll(quantity_input)

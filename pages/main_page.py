@@ -30,7 +30,7 @@ class MainPage(BasePage):
             category_names = []
             
             for element in category_elements:
-                name = self._clean_category_name(element.text)
+                name = self.get_text_from_element(element)
                 if name:
                     category_names.append(name)
             
@@ -40,7 +40,7 @@ class MainPage(BasePage):
         """Клик по категории в навигационной панели."""
         with allure.step(f"Кликаем по категории: {category_name}"):
             category_element = self._find_category_by_name(category_name)
-            previous_url = self.driver.current_url
+            previous_url = self.get_current_url()
             category_element.click()
             self.wait.wait_until_url_change(previous_url=previous_url)
             self.wait.wait_for_page_load()
@@ -99,7 +99,7 @@ class MainPage(BasePage):
         with allure.step("Открываем страницу товара по карточке на главной странице"):
             product_link = card.find_element(*MPL.product_name)
             self.scroll(product_link)
-            previous_url = self.driver.current_url
+            previous_url = self.get_current_url()
             product_link.click()
             self.wait.wait_until_url_change(previous_url=previous_url)
             self.wait.wait_for_page_load()
@@ -108,7 +108,7 @@ class MainPage(BasePage):
         """Клик по кнопке добавления товара в корзину на главной странице."""
         with allure.step("Кликаем по кнопке добавления товара в корзину на главной странице"):
             button = self.get_button_cart(card)
-            previous_url = self.driver.current_url
+            previous_url = self.get_current_url()
             button.click()
             self.wait.wait_until_url_change(previous_url=previous_url)
             self.wait.wait_for_page_load()
@@ -124,7 +124,7 @@ class MainPage(BasePage):
         with allure.step("Переходим на страницу корзины"):
             cart_button = self.find_element(*MPL.cart_button)
             self.scroll(cart_button)
-            previous_url = self.driver.current_url
+            previous_url = self.get_current_url()
             cart_button.click()
             self.wait.wait_until_url_change(previous_url=previous_url)
             self.wait.wait_for_page_load()
@@ -141,7 +141,7 @@ class MainPage(BasePage):
 
         category_elements = []
         for element in all_li_elements:
-            text = element.text.strip()
+            text = self.get_text_from_element(element)
             if text and text.upper() != 'HOME':
                 category_elements.append(element)
         
@@ -155,16 +155,8 @@ class MainPage(BasePage):
         category_elements = self._get_category_elements()
 
         for element in category_elements:
-            current_name = self._clean_category_name(element.text)
+            current_name = self.get_text_from_element(element)
             if current_name.upper() == category_name.upper():
                 return element
 
         raise ValueError(f"Категория '{category_name}' не найдена в навигационной панели.")
-
-    def _clean_category_name(self, name: str) -> str:
-        """Очистить название категории от HTML сущностей и пробелов."""
-        if not name:
-            return ""
-        cleaned = name.strip()
-        cleaned = cleaned.replace('&amp;', '&')
-        return cleaned

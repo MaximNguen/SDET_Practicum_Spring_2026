@@ -4,6 +4,7 @@ from typing import List
 import allure
 
 from utils.waitHelpers import WaitHelpers as WH
+from utils.locatorUtils import LocatorUtils as LU
 
 class BasePage:
     """
@@ -19,7 +20,9 @@ class BasePage:
     def find_element(self, *locator) -> WebElement:
         """Поиск элемента на странице по локатору."""
         with allure.step(f"Находим элемент с локатором: {locator}"):
-            self.wait.wait_for_element(locator)
+            locator = LU.normalize_locator(locator)
+            elem = self.wait.wait_for_element(locator)
+            self.scroll(elem)
             return self.driver.find_element(*locator)
     
     def click(self, *locator) -> None:
@@ -31,6 +34,7 @@ class BasePage:
     def find_elements(self, *locator) -> List[WebElement]:
         """Поиск всех элементов на странице по локатору."""
         with allure.step(f"Находим все элементы с локатором: {locator}"):
+            locator = LU.normalize_locator(locator)
             self.wait.wait_for_element(locator)
             return self.driver.find_elements(*locator)
     
@@ -47,12 +51,47 @@ class BasePage:
             self.wait.wait_for_clickable(element)
             element.send_keys(Keys.ENTER)
         
-    def get_text(self, locator: tuple, timeout: int = None) -> str:
+    def get_text(self, *locator) -> str:
         """Получить текст элемента"""
         with allure.step(f"Получаем текст элемента с локатором: {locator}"):
-            self.wait.wait_for_element(locator)
-            element = self.find_element(locator, timeout)
-            return element.text
+            locator = LU.normalize_locator(locator)
+            element = self.find_element(*locator)
+            element = element.text.strip()
+            return element
+        
+    def get_text_from_element(self, element: WebElement) -> str:
+        """Получить текст из WebElement"""
+        with allure.step(f"Получаем текст из элемента: {element}"):
+            return element.text.strip()
+        
+    def get_attribute_data(self, *locator, attribute: str) -> str:
+        """Получить атрибут элемента"""
+        with allure.step(f"Получаем атрибут '{attribute}' элемента с локатором: {locator}"):
+            locator = LU.normalize_locator(locator)
+            element = self.find_element(*locator)
+            return element.get_attribute(attribute)
+
+    def find_child_element(self, parent: WebElement, *locator) -> WebElement:
+        """Найти дочерний элемент внутри переданного WebElement."""
+        with allure.step(f"Находим дочерний элемент с локатором: {locator}"):
+            locator = LU.normalize_locator(locator)
+            element = parent.find_element(*locator)
+            self.scroll(element)
+            return element
+
+    def get_text_from_child(self, parent: WebElement, *locator) -> str:
+        """Получить текст дочернего элемента внутри WebElement."""
+        with allure.step(f"Получаем текст дочернего элемента с локатором: {locator}"):
+            element = self.find_child_element(parent, *locator)
+            return self.get_text_from_element(element)
+
+    def get_attribute_from_child(self, parent: WebElement, *locator, attribute: str) -> str:
+        """Получить атрибут дочернего элемента внутри WebElement."""
+        with allure.step(
+            f"Получаем атрибут '{attribute}' дочернего элемента с локатором: {locator}"
+        ):
+            element = self.find_child_element(parent, *locator)
+            return element.get_attribute(attribute)
     
     def scroll(self, element: WebElement):
         """Метод прокрутки до указанного элемента."""
@@ -74,12 +113,26 @@ class BasePage:
     def go_back_page(self) -> None:
         """Вернуться на предыдущую страницу."""
         with allure.step("Возвращаемся на предыдущую страницу"):
-            previous_url = self.driver.current_url
+            previous_url = self.get_current_url()
             self.driver.back()
             url_changed = self.wait.wait_until_url_change(previous_url=previous_url)
 
-            if not url_changed and self.driver.current_url == previous_url:
+            if not url_changed and self.get_current_url() == previous_url:
                 self.driver.execute_script("window.history.go(-1)")
                 self.wait.wait_until_url_change(previous_url=previous_url)
 
             self.wait.wait_for_page_load()
+
+    def get_current_url(self) -> str:
+        """Получить текущий URL страницы."""
+        with allure.step("Получаем текущий URL страницы"):
+            return self.driver.current_url
+        
+    def check_radio(self) -> bool:
+        """Проверить наличие radio-options на странице."""
+        with allure.step("Проверяем наличие radio-options на странице"):
+            return bool(
+                self.driver.execute_script(
+                    "return document.querySelectorAll(\"input[type='radio'][name^='option']\").length;"
+                )
+            )
