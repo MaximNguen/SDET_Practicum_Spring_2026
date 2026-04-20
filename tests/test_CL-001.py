@@ -19,9 +19,7 @@ class TestFilterPerformance:
         yield self.main_page
         self.main_page.quit()
 
-    @allure.story(
-        "Проверка наличия товаров всех категориях и количество товаров не меньше 4"
-    )
+    @allure.title("Проверка наличия товаров всех категориях и количество товаров не меньше 4")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_products_in_category(self):
         """Проверка наличия товаров в каждой категории и количество товаров не меньше 4."""
@@ -41,7 +39,7 @@ class TestFilterPerformance:
                     len(products_data) >= 4
                 ), f"На странице категории '{category}' найдено меньше 4 товаров."
 
-    @allure.story("Проверка кликабельности сортировки товаров")
+    @allure.title("Проверка кликабельности сортировки товаров")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_filter_performance(self):
         """Проверка кликабельности сортировки товаров."""
@@ -58,7 +56,7 @@ class TestFilterPerformance:
             select = self.items_page.get_filter_select()
             assert select.is_displayed(), "Фильтр не отображается на сайте"
 
-    @allure.story("Проверка сортировки товаров по цене от дешевых к дорогим")
+    @allure.title("Проверка сортировки товаров по цене от дешевых к дорогим")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_filter_sorting_price_asc(self):
         """Проверка сортировки товаров по цене от дешевых к дорогим."""
@@ -81,7 +79,7 @@ class TestFilterPerformance:
 
                 self.main_page.open(main_page_url)
 
-    @allure.story("Проверка сортировки товаров по цене от дорогих к дешевым")
+    @allure.title("Проверка сортировки товаров по цене от дорогих к дешевым")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_filter_sorting_price_desc(self):
         categories = self.main_page.get_navbar_items()
@@ -103,7 +101,7 @@ class TestFilterPerformance:
 
                 self.main_page.open(main_page_url)
 
-    @allure.story("Проверка сортировки товаров по названию от A до Z")
+    @allure.title("Проверка сортировки товаров по названию от A до Z")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_filter_sorting_name_asc(self):
         categories = self.main_page.get_navbar_items()
@@ -125,7 +123,7 @@ class TestFilterPerformance:
 
                 self.main_page.open(main_page_url)
 
-    @allure.story("Проверка сортировки товаров по названию от Z до A")
+    @allure.title("Проверка сортировки товаров по названию от Z до A")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_filter_sorting_name_desc(self):
         categories = self.main_page.get_navbar_items()

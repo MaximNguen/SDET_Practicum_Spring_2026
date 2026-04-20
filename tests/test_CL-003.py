@@ -52,7 +52,7 @@ class TestCartDeleteFunctionality:
 
         return added_products
 
-    @allure.story("Добавление 5 случайных товаров и удаление четных по порядку")
+    @allure.title("Добавление 5 случайных товаров и удаление четных по порядку")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_delete_even_order_items_and_validate_total(self):
         """Добавить 5 случайных товаров и удалить все четные по порядку с проверкой суммы."""

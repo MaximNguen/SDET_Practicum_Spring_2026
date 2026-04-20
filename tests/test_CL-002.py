@@ -49,7 +49,7 @@ class TestSearchAndCartFunctionality:
         self.product_page.set_random_quantity()
         self.product_page.click_add_to_cart_button()
 
-    @allure.story("Проверка наличия поля для ввода поиска на главной странице")
+    @allure.title("Проверка наличия поля для ввода поиска на главной странице")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_search_input(self):
         """Проверка наличия поля для ввода поиска на главной странице."""
@@ -58,7 +58,7 @@ class TestSearchAndCartFunctionality:
             search_input.is_displayed()
         ), "Не отображается поле ввода поиска на главной странице"
 
-    @allure.story("Проверка результатов поиска после ввода текста")
+    @allure.title("Проверка результатов поиска после ввода текста")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_search_results(self):
         """Проверка результатов поиска после ввода текста."""
@@ -70,7 +70,7 @@ class TestSearchAndCartFunctionality:
             results = self.search_page.get_products_cards()
             assert results, f"По запросу '{search_value}' не найдено товаров."
 
-    @allure.story("Проверка наличия товаров в корзине после добавления")
+    @allure.title("Проверка наличия товаров в корзине после добавления")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_check_add_to_cart_button(self):
         """Проверка наличия товаров в корзине после добавления."""
@@ -85,7 +85,7 @@ class TestSearchAndCartFunctionality:
         cart_items = self.cart_page.get_cart_items_data()
         assert len(cart_items) == 2, "В корзине не найдено товаров после добавления."
 
-    @allure.story("Проверка изменения товаров в корзине после добавления")
+    @allure.title("Проверка изменения товаров в корзине после добавления")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_change_quantity_for_lowest(self):
         """Проверка изменения товаров в корзине после добавления."""
