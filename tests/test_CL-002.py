@@ -132,4 +132,4 @@ class TestSearchAndCartFunctionality:
         new_data = lowest_data["quantity"] * lowest_data["price"]
         assert (
             new_total_price == total_price + new_data
-        ),  "Общая стоимость товаров в корзине не изменилась на сумму удвоенного количества товара с самой низкой ценой."
+        ), "Общая стоимость товаров в корзине не изменилась на сумму удвоенного количества товара с самой низкой ценой."

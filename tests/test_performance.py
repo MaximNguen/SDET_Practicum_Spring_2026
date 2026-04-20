@@ -6,6 +6,7 @@ from data.urls import main_page_url
 from data.expected_data import expected_categories
 from data.mock_data import random_category
 
+
 @allure.epic("UI Тесты")
 @allure.feature("Тест-кейсы на наличие элементов и их работоспособность")
 class TestPositiveResult:
@@ -56,7 +57,6 @@ class TestPositiveResult:
     def test_navbar_categories(self):
         """Проверка наличия категорий в навигационной панели."""
         categories = self.main_page.get_navbar_items()
-        
         for category in expected_categories:
             with allure.step(f"Проверяем наличие категории: {category}"):
                 assert category.upper() in categories, f"Категория '{category}' не найдена в навигационной панели."
