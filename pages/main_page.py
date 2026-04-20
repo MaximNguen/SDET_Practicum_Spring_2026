@@ -6,6 +6,9 @@ import random
 
 from pages.base_page import BasePage
 from data.locators_main import MainPageLocators as MPL
+from data.locators_items import ItemPageLocators as IPL
+from data.locators_product import ProductPageLocators as PPL
+from data.locators_cart import CartPageLocators as CPL
 from data.mock_data import search_value
 
 
@@ -41,10 +44,10 @@ class MainPage(BasePage):
         """Клик по категории в навигационной панели."""
         with allure.step(f"Кликаем по категории: {category_name}"):
             category_element = self._find_category_by_name(category_name)
-            previous_url = self.get_current_url()
-            category_element.click()
-            self.wait.wait_until_url_change(previous_url=previous_url)
-            self.wait.wait_for_page_load()
+            self._click_and_wait_navigation(
+                category_element,
+                expected_locator=IPL.filter_select,
+            )
 
     def get_search_input(self):
         """Получить элемент поля поиска на главной странице."""
@@ -102,10 +105,10 @@ class MainPage(BasePage):
         with allure.step("Открываем страницу товара по карточке на главной странице"):
             product_link = card.find_element(*MPL.product_name)
             self.scroll(product_link)
-            previous_url = self.get_current_url()
-            product_link.click()
-            self.wait.wait_until_url_change(previous_url=previous_url)
-            self.wait.wait_for_page_load()
+            self._click_and_wait_navigation(
+                product_link,
+                expected_locator=PPL.input_quantity,
+            )
 
     def click_add_cart_button(self, card: WebElement) -> None:
         """Клик по кнопке добавления товара в корзину на главной странице."""
@@ -113,10 +116,7 @@ class MainPage(BasePage):
             "Кликаем по кнопке добавления товара в корзину на главной странице"
         ):
             button = self.get_button_cart(card)
-            previous_url = self.get_current_url()
-            button.click()
-            self.wait.wait_until_url_change(previous_url=previous_url)
-            self.wait.wait_for_page_load()
+            self._click_and_wait_navigation(button)
 
     def enter_search_value(self, element: WebElement) -> None:
         """Ввести значение в поле поиска."""
@@ -129,10 +129,20 @@ class MainPage(BasePage):
         with allure.step("Переходим на страницу корзины"):
             cart_button = self.find_element(*MPL.cart_button)
             self.scroll(cart_button)
-            previous_url = self.get_current_url()
-            cart_button.click()
-            self.wait.wait_until_url_change(previous_url=previous_url)
-            self.wait.wait_for_page_load()
+            self._click_and_wait_navigation(
+                cart_button,
+                expected_locator=CPL.table,
+            )
+
+    def _click_and_wait_navigation(self, element: WebElement, expected_locator: tuple | None = None) -> None:
+        """Кликнуть по элементу и дождаться навигации и загрузки страницы."""
+        previous_url = self.get_current_url()
+        element.click()
+        self.wait.wait_until_url_change(previous_url=previous_url)
+        self.wait.wait_for_page_load()
+
+        if expected_locator is not None:
+            self.find_element(*expected_locator)
 
     def _get_category_elements(self) -> List[WebElement]:
         """
