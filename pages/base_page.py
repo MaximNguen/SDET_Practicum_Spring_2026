@@ -34,14 +34,18 @@ class BasePage:
             self.wait.wait_for_element(locator)
             return self.driver.find_elements(*locator)
     
-    def input_text(self, element: WebElement, text: str, press_enter: bool = False):
+    def input_text(self, element: WebElement, text: str):
         """Ввести текст в поле."""
         with allure.step(f"Вводим текст '{text}' в элемент с элементом: {element}"):
             element.clear()
             self.wait.wait_for_clickable(element)
             element.send_keys(text)
-            if press_enter:
-                element.send_keys(Keys.ENTER)
+    
+    def input_enter(self, element: WebElement):
+        """Нажать Enter в поле."""
+        with allure.step(f"Нажимаем Enter в элементе: {element}"):
+            self.wait.wait_for_clickable(element)
+            element.send_keys(Keys.ENTER)
         
     def get_text(self, locator: tuple, timeout: int = None) -> str:
         """Получить текст элемента"""

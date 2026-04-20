@@ -114,7 +114,8 @@ class CartPage(BasePage):
                 try:
                     current_quantity = int(current_value)
                     new_quantity = current_quantity * 2
-                    self.input_text(quantity_input, text=str(new_quantity), press_enter=True)
+                    self.input_text(quantity_input, text=str(new_quantity))
+                    self.input_enter(quantity_input)
                 except ValueError:
                     pass
 

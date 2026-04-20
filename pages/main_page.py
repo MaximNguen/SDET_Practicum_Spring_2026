@@ -116,7 +116,8 @@ class MainPage(BasePage):
     def enter_search_value(self, element: WebElement) -> None:
         """Ввести значение в поле поиска."""    
         with allure.step(f"Вводим значение '{search_value}' в поле поиска"):
-            self.input_text(element, text=search_value, press_enter=True)
+            self.input_text(element, text=search_value)
+            self.input_enter(element)
             
     def go_to_cart_page(self):
         """Перейти на страницу корзины."""
