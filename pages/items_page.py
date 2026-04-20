@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import NoSuchElementException
 import allure
 from typing import List
 
@@ -47,7 +48,8 @@ class ItemPage(BasePage):
                 try:
                     price_element = card.find_element(*IPL.price_product)
                     self.scroll(price_element)
-                except:
+                except NoSuchElementException:
+                    print(f"Ошибка при поиске элемента цены товара, товар со скидкой")
                     price_element = card.find_element(*IPL.price_product_new)
                     self.scroll(price_element)
                 price_text = self.get_text_from_element(price_element).replace("$", "")
