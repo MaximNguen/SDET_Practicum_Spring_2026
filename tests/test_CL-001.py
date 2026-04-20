@@ -160,10 +160,10 @@ class TestFilterPerformance:
         for category in categories:
             with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
                 self.main_page.click_category(category)
+                current_url = self.main_page.get_current_url()
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Name A - Z")
                 products_data = self.items_page.get_products_names()
-                current_url = self.main_page.get_current_url()
 
                 assert (
                     current_url != main_page_url
@@ -172,8 +172,6 @@ class TestFilterPerformance:
                 assert products_data == sorted(
                     products_data
                 ), f"Товары в категории '{category}' не отсортированы по названию от A до Z."
-
-                self.main_page.open(main_page_url)
 
     @allure.title("Проверка сортировки товаров по названию от Z до A")
     @allure.severity(allure.severity_level.CRITICAL)

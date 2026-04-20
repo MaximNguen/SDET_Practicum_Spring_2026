@@ -139,6 +139,7 @@ class MainPage(BasePage):
         previous_url = self.get_current_url()
         element.click()
         self.wait.wait_until_url_change(previous_url=previous_url)
+        self.wait.wait_until_logo_available(MPL.logo_button)
         self.wait.wait_for_page_load()
 
         if expected_locator is not None:

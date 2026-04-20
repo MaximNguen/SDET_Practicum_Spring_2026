@@ -67,3 +67,14 @@ class WaitHelpers:
         except TimeoutException:
             print(f"Элемент не устарел в течение {timeout} секунд.")
             return False
+        
+    def wait_until_logo_available(self, locator, timeout=10):
+        """Ожидание появления логотипа на странице."""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_element_located(locator)
+            )
+            return True
+        except TimeoutException:
+            print(f"Логотип не появился в течение {timeout} секунд.")
+            return False

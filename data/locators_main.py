@@ -10,3 +10,5 @@ class MainPageLocators:
     product_name = (By.CSS_SELECTOR, ".prdocutname")
     product_cart_button = (By.CSS_SELECTOR, ".productcart")
     cart_button = (By.CSS_SELECTOR, "a[href*='rt=checkout/cart']")
+    logo_button = (By.CSS_SELECTOR, 'a[class="logo"]')
+    
