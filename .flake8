@@ -1,0 +1,32 @@
+[flake8]
+filename = *.py
+
+exclude = 
+    .git,
+    __pycache__,
+    venv,
+    env,
+    .venv,
+    build,
+    dist,
+    migrations,
+    .pytest_cache,
+    .tox
+    .idea
+    allure-results
+    github
+
+max-line-length = 79
+
+ignore = 
+    E203,
+    W503,
+    E501
+
+max-complexity = 10
+
+encoding = utf-8
+
+show-source = True
+
+statistics = True

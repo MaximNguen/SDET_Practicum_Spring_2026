@@ -8,12 +8,13 @@ from pages.base_page import BasePage
 from data.locators_main import MainPageLocators as MPL
 from data.mock_data import search_value
 
+
 class MainPage(BasePage):
     """
     Класс для взаимодействия с главной страницей.
     Содержит методы для работы с элементами страницы.
     """
-    
+
     def __init__(self, driver):
         super().__init__(driver)
 
@@ -22,20 +23,20 @@ class MainPage(BasePage):
             nav = self.find_element(*MPL.navbar_list)
             self.scroll(nav)
             return nav
-    
+
     def get_navbar_items(self) -> List[str]:
         """Получить список категорий из навигационной панели."""
         with allure.step("Получаем названия категорий из навигационной панели"):
             category_elements = self._get_category_elements()
             category_names = []
-            
+
             for element in category_elements:
                 name = self.get_text_from_element(element)
                 if name:
                     category_names.append(name)
-            
+
             return category_names
-    
+
     def click_category(self, category_name: str) -> None:
         """Клик по категории в навигационной панели."""
         with allure.step(f"Кликаем по категории: {category_name}"):
@@ -44,7 +45,7 @@ class MainPage(BasePage):
             category_element.click()
             self.wait.wait_until_url_change(previous_url=previous_url)
             self.wait.wait_for_page_load()
-            
+
     def get_search_input(self):
         """Получить элемент поля поиска на главной странице."""
         with allure.step("Получаем элемент поля поиска на главной странице"):
@@ -68,7 +69,9 @@ class MainPage(BasePage):
             name_element = card.find_element(*MPL.product_name)
             return name_element.text.strip()
 
-    def get_random_product_card(self, excluded_product_names: List[str] = None) -> tuple[WebElement, str]:
+    def get_random_product_card(
+        self, excluded_product_names: List[str] = None
+    ) -> tuple[WebElement, str]:
         """Получить случайную карточку товара на главной странице."""
         with allure.step("Выбираем случайную карточку товара на главной странице"):
             cards = self.get_products_cards()
@@ -106,19 +109,21 @@ class MainPage(BasePage):
 
     def click_add_cart_button(self, card: WebElement) -> None:
         """Клик по кнопке добавления товара в корзину на главной странице."""
-        with allure.step("Кликаем по кнопке добавления товара в корзину на главной странице"):
+        with allure.step(
+            "Кликаем по кнопке добавления товара в корзину на главной странице"
+        ):
             button = self.get_button_cart(card)
             previous_url = self.get_current_url()
             button.click()
             self.wait.wait_until_url_change(previous_url=previous_url)
             self.wait.wait_for_page_load()
-        
+
     def enter_search_value(self, element: WebElement) -> None:
-        """Ввести значение в поле поиска."""    
+        """Ввести значение в поле поиска."""
         with allure.step(f"Вводим значение '{search_value}' в поле поиска"):
             self.input_text(element, text=search_value)
             self.input_enter(element)
-            
+
     def go_to_cart_page(self):
         """Перейти на страницу корзины."""
         with allure.step("Переходим на страницу корзины"):
@@ -129,7 +134,6 @@ class MainPage(BasePage):
             self.wait.wait_until_url_change(previous_url=previous_url)
             self.wait.wait_for_page_load()
 
-    
     def _get_category_elements(self) -> List[WebElement]:
         """
         Получить элементы категорий (приватный метод).
@@ -137,14 +141,14 @@ class MainPage(BasePage):
         """
         navbar = self.find_element(*MPL.navbar_list)
         self.scroll(navbar)
-        all_li_elements = navbar.find_elements(By.TAG_NAME, 'li')
+        all_li_elements = navbar.find_elements(By.TAG_NAME, "li")
 
         category_elements = []
         for element in all_li_elements:
             text = self.get_text_from_element(element)
-            if text and text.upper() != 'HOME':
+            if text and text.upper() != "HOME":
                 category_elements.append(element)
-        
+
         return category_elements
 
     def _find_category_by_name(self, category_name: str) -> WebElement:
@@ -159,4 +163,6 @@ class MainPage(BasePage):
             if current_name.upper() == category_name.upper():
                 return element
 
-        raise ValueError(f"Категория '{category_name}' не найдена в навигационной панели.")
+        raise ValueError(
+            f"Категория '{category_name}' не найдена в навигационной панели."
+        )

@@ -1,5 +1,4 @@
 from selenium.webdriver.remote.webdriver import WebDriver
-import allure
 
 from pages.main_page import MainPage
 from pages.items_page import ItemPage
@@ -7,12 +6,13 @@ from pages.search_page import SearchPage
 from pages.product_page import ProductPage
 from pages.cart_page import CartPage
 
+
 class PageFactory:
     """
     Фабрика для создания и управления страницами.
     Реализует паттерн Factory.
     """
-    
+
     def __init__(self, driver: WebDriver):
         self.driver = driver
         self.pages_data = {
@@ -20,16 +20,16 @@ class PageFactory:
             "items_page": ItemPage(self.driver),
             "search_page": SearchPage(self.driver),
             "product_page": ProductPage(self.driver),
-            "cart_page": CartPage(self.driver)
+            "cart_page": CartPage(self.driver),
         }
-        
+
     def get_page(self, page_name: str) -> object:
         """Получить страницу по имени."""
         if page_name in self.pages_data:
             return self.pages_data[page_name]
         else:
             raise ValueError(f"Страница '{page_name}' не найдена в фабрике.")
-    
+
     @property
     def main_page(self) -> MainPage:
         """Получить главную страницу."""

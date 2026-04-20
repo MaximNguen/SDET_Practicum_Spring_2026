@@ -11,11 +11,15 @@ class TestCartDeleteFunctionality:
 
     @classmethod
     def setup_class(cls):
-        print("\n========= Начало выполнения тест-кейсов на удаление товаров из корзины ==========")
+        print(
+            "\n========= Начало выполнения тест-кейсов на удаление товаров из корзины =========="
+        )
 
     @classmethod
     def teardown_class(cls):
-        print("\n========= Конец выполнения тест-кейсов на удаление товаров из корзины ==========")
+        print(
+            "\n========= Конец выполнения тест-кейсов на удаление товаров из корзины =========="
+        )
 
     @pytest.fixture(autouse=True)
     def setup(self, main_page, product_page, cart_page, url=main_page_url):
@@ -29,7 +33,9 @@ class TestCartDeleteFunctionality:
     def _add_random_products_from_main_page(self, products_count: int = 5) -> list[str]:
         """Добавить в корзину указанное количество случайных товаров с главной страницы."""
         cards = self.main_page.get_products_cards()
-        available_names = {self.main_page.get_product_name_from_card(card) for card in cards}
+        available_names = {
+            self.main_page.get_product_name_from_card(card) for card in cards
+        }
         available_names = {name for name in available_names if name}
 
         assert len(available_names) >= products_count, (
@@ -41,11 +47,15 @@ class TestCartDeleteFunctionality:
         for index in range(products_count):
             if index > 0:
                 self.main_page.open(main_page_url)
-            card, product_name = self.main_page.get_random_product_card(excluded_product_names=added_products)
+            card, product_name = self.main_page.get_random_product_card(
+                excluded_product_names=added_products
+            )
             self.main_page.open_product_page_from_card(card)
 
             input_quantity = self.product_page.get_input_quantity()
-            assert input_quantity.is_displayed(), "Не отображается поле ввода количества товара на странице товара"
+            assert (
+                input_quantity.is_displayed()
+            ), "Не отображается поле ввода количества товара на странице товара"
 
             self.product_page.set_random_quantity()
             self.product_page.click_add_to_cart_button()
@@ -65,31 +75,45 @@ class TestCartDeleteFunctionality:
         with allure.step("Переходим в корзину и считываем данные до удаления"):
             self.main_page.go_to_cart_page()
             cart_data_before = self.cart_page.get_cart_items_data()
-            assert len(cart_data_before) == 5, "В корзине должно быть 5 товаров перед удалением"
+            assert (
+                len(cart_data_before) == 5
+            ), "В корзине должно быть 5 товаров перед удалением"
 
             total_before = self.cart_page.get_total_price()
-            assert total_before is not None and total_before > 0, "Некорректная итоговая стоимость корзины до удаления"
+            assert (
+                total_before is not None and total_before > 0
+            ), "Некорректная итоговая стоимость корзины до удаления"
 
         with allure.step("Удаляем товары с четными порядковыми номерами"):
-            even_positions = [index for index in range(1, len(cart_data_before) + 1) if index % 2 == 0]
+            even_positions = [
+                index for index in range(1, len(cart_data_before) + 1) if index % 2 == 0
+            ]
             removed_sum = sum(
-                item['price'] * item['quantity']
+                item["price"] * item["quantity"]
                 for index, item in enumerate(cart_data_before, start=1)
                 if index % 2 == 0
             )
 
             removed_count = self.cart_page.remove_even_items_by_order()
-            assert removed_count == len(even_positions), "Количество удаленных четных товаров не совпадает с ожидаемым"
+            assert removed_count == len(
+                even_positions
+            ), "Количество удаленных четных товаров не совпадает с ожидаемым"
 
-        with allure.step("Проверяем итоговую стоимость и количество товаров после удаления"):
+        with allure.step(
+            "Проверяем итоговую стоимость и количество товаров после удаления"
+        ):
             cart_data_after = self.cart_page.get_cart_items_data()
             expected_items_after = len(cart_data_before) - len(even_positions)
-            assert len(cart_data_after) == expected_items_after, "Некорректное количество товаров в корзине после удаления"
+            assert (
+                len(cart_data_after) == expected_items_after
+            ), "Некорректное количество товаров в корзине после удаления"
 
             total_after = self.cart_page.get_total_price()
-            assert total_after is not None and total_after >= 0, "Некорректная итоговая стоимость корзины после удаления"
+            assert (
+                total_after is not None and total_after >= 0
+            ), "Некорректная итоговая стоимость корзины после удаления"
 
             expected_total_after = total_before - removed_sum
-            assert total_after == pytest.approx(expected_total_after, abs=0.01), (
-                f"Итоговая стоимость после удаления должна быть {expected_total_after}, получено {total_after}"
-            )
+            assert total_after == pytest.approx(
+                expected_total_after, abs=0.01
+            ), f"Итоговая стоимость после удаления должна быть {expected_total_after}, получено {total_after}"
