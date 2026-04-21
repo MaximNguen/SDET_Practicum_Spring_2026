@@ -2,7 +2,7 @@ import allure
 import pytest
 import logging
 
-from data.urls import main_page_url
+from data.urls import main_page_url, cart_page as cart_page_url
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +36,7 @@ class TestCartDeleteFunctionality:
 
         added_products = []
         for index in range(products_count):
-            logger.info(f"Добавляем товар с позицией {index + 1}")
-            if index > 0:
-                self.main_page.open(main_page_url)
+            logger.info(f"Добавляем товар по счету {index + 1}")
             card, product_name = self.main_page.get_random_product_card(
                 excluded_product_names=added_products
             )
@@ -53,8 +51,26 @@ class TestCartDeleteFunctionality:
             self.product_page.click_add_to_cart_button()
 
             added_products.append(product_name)
+            self._return_to_products_page()
 
         return added_products
+
+    def _return_to_products_page(self) -> None:
+        """Вернуться к странице товаров после добавления товара в корзину."""
+        current_url = self.main_page.get_current_url()
+
+        if cart_page_url in current_url:
+            logger.info("После добавления открылась корзина, возвращаемся назад дважды к товарам")
+            self.main_page.go_back_page()
+            self.main_page.go_back_page()
+        else:
+            logger.info("После добавления остались на странице товара, возвращаемся назад к товарам")
+            self.main_page.go_back_page()
+
+        current_url = self.main_page.get_current_url()
+        if cart_page_url in current_url or "rt=product/product" in current_url:
+            logger.warning("Не удалось вернуться к товарам через историю, открываем главную страницу")
+            self.main_page.open(main_page_url)
 
     @allure.title("Добавление 5 случайных товаров и удаление четных по порядку")
     @allure.severity(allure.severity_level.CRITICAL)
