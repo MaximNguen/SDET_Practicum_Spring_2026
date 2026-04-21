@@ -9,7 +9,6 @@ allure-report
 *.json
 *.html
 *.csv
-*.db
 *.sqlite
 *.pyc
 *.pyo
