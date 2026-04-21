@@ -22,7 +22,6 @@ class WaitHelpers:
             print(
                 f"Элемент с локатором {locator} не найден в течение {timeout} секунд."
             )
-            return None
 
     def wait_for_clickable(self, locator, timeout=10):
         """Метод проверки кликабельности элемента"""
@@ -35,7 +34,6 @@ class WaitHelpers:
             print(
                 f"Элемент с локатором {locator} не кликабельный в течение {timeout} секунд."
             )
-            return None
 
     def wait_until_url_change(self, timeout=10, previous_url=None):
         """Метод ожидания изменения URL относительно переданного URL."""

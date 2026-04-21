@@ -203,4 +203,3 @@ class TestFilterPerformance:
                 assert products_data == sorted(
                     products_data, reverse=True
                 ), f"Товары в категории '{category}' не отсортированы по названию от Z до A."
-                self.main_page.open(main_page_url)
