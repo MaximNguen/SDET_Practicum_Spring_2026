@@ -1,10 +1,12 @@
 import allure
 import pytest
 import random
+import logging
 
 from data.urls import main_page_url
 from data.expected_data import expected_categories
 
+logger = logging.getLogger(__name__)
 
 @allure.epic("Выполнение Чек-листа 001 - Проверка фильтра товаров")
 @allure.feature("Тест-кейсы для проверки производительности фильтра товаров")
@@ -32,15 +34,18 @@ class TestFilterPerformance:
         )
     def test_check_products_in_category(self):
         """Проверка наличия товаров в каждой категории и количество товаров не меньше 4."""
+        logger.info("Проверяем наличие товаров в каждой категории и количество товаров не меньше 4")
         categories = self.main_page.get_navbar_items()
         for category in categories:
             with allure.step(f"Проверяем наличие товаров в категории: {category}"):
+                logger.info(f"Проверяем наличие товаров в категории: {category}")
                 self.main_page.click_category(category)
                 current_url = self.main_page.get_current_url()
                 assert (
                     current_url != main_page_url
                 ), f"Клик по категории '{category}' не привел к переходу"
                 products_data = self.items_page.get_products_names()
+                logger.info(f"Получаем данные о товарах в категории: {category}")
                 assert (
                     products_data
                 ), f"На странице категории '{category}' не найдено товаров."
@@ -63,6 +68,7 @@ class TestFilterPerformance:
         """Проверка кликабельности сортировки товаров."""
         category = random.choice(expected_categories)
         with allure.step("Переходим на страницу 1 из категорий"):
+            logger.info("Переходим на страницу 1 из категорий")
             self.main_page.click_category(category)
             current_url = self.main_page.get_current_url()
             assert (
@@ -71,6 +77,8 @@ class TestFilterPerformance:
         with allure.step(
             f"Проверяем наличие сортировку товаров в категории: {category}"
         ):
+            logger.info(f"Проверяем наличие сортировку товаров в категории: {category}")
+
             select = self.items_page.get_filter_select()
             assert select.is_displayed(), "Фильтр не отображается на сайте"
 
@@ -89,9 +97,11 @@ class TestFilterPerformance:
         )
     def test_check_filter_sorting_price_asc(self):
         """Проверка сортировки товаров по цене от дешевых к дорогим."""
+        logger.info("Проверяем сортировку товаров по цене от дешевых к дорогим")
         categories = self.main_page.get_navbar_items()
         for category in categories:
             with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+                logger.info(f"Проверяем сортировку товаров в категории: {category}")
                 self.main_page.click_category(category)
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Price Low > High")
@@ -105,8 +115,6 @@ class TestFilterPerformance:
                 assert products_data == sorted(
                     products_data
                 ), f"Товары в категории '{category}' не отсортированы по цене от дешевых к дорогим."
-
-                self.main_page.open(main_page_url)
 
     @allure.title("Проверка сортировки товаров по цене от дорогих к дешевым")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -126,6 +134,7 @@ class TestFilterPerformance:
         categories = self.main_page.get_navbar_items()
         for category in categories:
             with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+                logger.info(f"Проверяем сортировку товаров в категории: {category}")
                 self.main_page.click_category(category)
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Price High > Low")
@@ -139,8 +148,6 @@ class TestFilterPerformance:
                 assert products_data == sorted(
                     products_data, reverse=True
                 ), f"Товары в категории '{category}' не отсортированы по цене от дорогих к дешевым."
-
-                self.main_page.open(main_page_url)
 
     @allure.title("Проверка сортировки товаров по названию от A до Z")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -156,9 +163,11 @@ class TestFilterPerformance:
         Ожидаемый результат - Товары в категории отсортированы по названию от A до Z."""
         )
     def test_check_filter_sorting_name_asc(self):
+        logger.info("Проверяем сортировку товаров по названию от A до Z")
         categories = self.main_page.get_navbar_items()
         for category in categories:
             with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+                logger.info(f"Проверяем сортировку товаров в категории: {category}")
                 self.main_page.click_category(category)
                 current_url = self.main_page.get_current_url()
                 cards = self.items_page.get_products_cards()
@@ -187,9 +196,11 @@ class TestFilterPerformance:
         Ожидаемый результат - Товары в категории отсортированы по названию от Z до A."""
         )
     def test_check_filter_sorting_name_desc(self):
+        logger.info("Проверяем сортировку товаров по названию от Z до A")
         categories = self.main_page.get_navbar_items()
         for category in categories:
             with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
+                logger.info(f"Проверяем сортировку товаров в категории: {category}")
                 self.main_page.click_category(category)
                 cards = self.items_page.get_products_cards()
                 self.items_page.select_filter_option("Name Z - A")

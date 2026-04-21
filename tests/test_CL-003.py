@@ -1,8 +1,10 @@
 import allure
 import pytest
+import logging
 
 from data.urls import main_page_url
 
+logger = logging.getLogger(__name__)
 
 @allure.epic("Выполнение Чек-листа 003 - Проверка удаления товаров из корзины")
 @allure.feature("Тест-кейсы для удаления четных по порядку товаров из корзины")
@@ -20,6 +22,7 @@ class TestCartDeleteFunctionality:
 
     def _add_random_products_from_main_page(self, products_count: int = 5) -> list[str]:
         """Добавить в корзину указанное количество случайных товаров с главной страницы."""
+        logger.info("Добавляем случайные товары с главной страницы")
         cards = self.main_page.get_products_cards()
         available_names = {
             self.main_page.get_product_name_from_card(card) for card in cards
@@ -33,6 +36,7 @@ class TestCartDeleteFunctionality:
 
         added_products = []
         for index in range(products_count):
+            logger.info(f"Добавляем товар с позицией {index + 1}")
             if index > 0:
                 self.main_page.open(main_page_url)
             card, product_name = self.main_page.get_random_product_card(
@@ -73,11 +77,13 @@ class TestCartDeleteFunctionality:
         )
     def test_delete_even_order_items_and_validate_total(self):
         """Добавить 5 случайных товаров и удалить все четные по порядку с проверкой суммы."""
+        logger.info("Добавляем 5 случайных товаров и удаляем все четные по порядку с проверкой суммы")
         with allure.step("Добавляем в корзину 5 случайных товаров с главной страницы"):
             added_products = self._add_random_products_from_main_page(products_count=5)
             assert len(added_products) == 5, "Не удалось добавить 5 товаров в корзину"
 
         with allure.step("Переходим в корзину и считываем данные до удаления"):
+            logger.info("Переходим в корзину и считываем данные до удаления")
             self.main_page.go_to_cart_page()
             cart_data_before = self.cart_page.get_cart_items_data()
             assert (
@@ -90,6 +96,7 @@ class TestCartDeleteFunctionality:
             ), "Некорректная итоговая стоимость корзины до удаления"
 
         with allure.step("Удаляем товары с четными порядковыми номерами"):
+            logger.info("Удаляем товары с четными порядковыми номерами")
             even_positions = [
                 index for index in range(1, len(cart_data_before) + 1) if index % 2 == 0
             ]
@@ -107,6 +114,7 @@ class TestCartDeleteFunctionality:
         with allure.step(
             "Проверяем итоговую стоимость и количество товаров после удаления"
         ):
+            logger.info("Проверяем итоговую стоимость и количество товаров после удаления")
             cart_data_after = self.cart_page.get_cart_items_data()
             expected_items_after = len(cart_data_before) - len(even_positions)
             assert (

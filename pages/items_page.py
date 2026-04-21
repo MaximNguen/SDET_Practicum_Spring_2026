@@ -1,3 +1,4 @@
+import logging
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
@@ -7,6 +8,7 @@ from typing import List
 from pages.base_page import BasePage
 from data.locators_items import ItemPageLocators as IPL
 
+logger = logging.getLogger(__name__)
 
 class ItemPage(BasePage):
     """
@@ -20,6 +22,7 @@ class ItemPage(BasePage):
     def get_filter_select(self):
         """Получить элемент выпадающего списка для сортировки товаров."""
         with allure.step("Получаем элемент выпадающего списка для сортировки товаров"):
+            logger.info("Получаем элемент выпадающего списка для сортировки товаров")
             select = self.find_element(*IPL.filter_select)
             self.scroll(select)
             return select
@@ -29,6 +32,7 @@ class ItemPage(BasePage):
         with allure.step(
             f"Выбираем опцию '{option_text}' из выпадающего списка для сортировки товаров"
         ):
+            logger.info(f"Выбираем опцию '{option_text}' из выпадающего списка для сортировки товаров")
             select_element = self.get_filter_select()
             select = Select(select_element)
             select.select_by_visible_text(option_text)
@@ -36,12 +40,14 @@ class ItemPage(BasePage):
     def get_products_cards(self) -> List[WebElement]:
         """Получить элементы карточек товаров на странице."""
         with allure.step("Получаем элементы карточек товаров на странице"):
+            logger.info("Получаем элементы карточек товаров на странице")
             cards = self.find_elements(*IPL.cards)
             return cards
 
     def get_products_prices(self) -> List[float]:
         """Получить цены товаров на странице."""
         with allure.step("Получаем цены товаров на странице"):
+            logger.info("Получаем цены товаров на странице")
             cards = self.get_products_cards()
             prices = []
             for card in cards:
@@ -49,7 +55,7 @@ class ItemPage(BasePage):
                     price_element = card.find_element(*IPL.price_product)
                     self.scroll(price_element)
                 except NoSuchElementException:
-                    print(f"Ошибка при поиске элемента цены товара, товар со скидкой")
+                    logger.error(f"Ошибка при поиске элемента цены товара, товар со скидкой")
                     price_element = card.find_element(*IPL.price_product_new)
                     self.scroll(price_element)
                 price_text = self.get_text_from_element(price_element).replace("$", "")
@@ -57,12 +63,14 @@ class ItemPage(BasePage):
                     price = float(price_text)
                     prices.append(price)
                 except ValueError:
+                    logger.error(f"Не удалось распарсить цену товара: '{price_text}'")
                     continue
             return prices
 
     def get_products_names(self) -> List[str]:
         """Получить названия товаров на странице."""
         with allure.step("Получаем названия товаров на странице"):
+            logger.info("Получаем названия товаров на странице")
             cards = self.get_products_cards()
             names = []
             for card in cards:

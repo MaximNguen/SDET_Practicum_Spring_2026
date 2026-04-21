@@ -1,9 +1,11 @@
+import logging
 import allure
 import pytest
 
 from data.urls import main_page_url
 from data.mock_data import search_value
 
+logger = logging.getLogger(__name__)
 
 @allure.epic("Выполнение Чек-листа 002 - Проверка добавления товара в корзину, поиск товаров и изменение корзины")
 @allure.feature("Тест-кейсы для проверки добавления товара в корзину, поиск товаров и изменение корзины")
@@ -31,6 +33,7 @@ class TestSearchAndCartFunctionality:
 
     def _add_product_to_cart_from_search(self, position: int) -> None:
         """Найти товар в выдаче поиска по позиции и добавить его в корзину."""
+        logger.info("Добавляем товар в корзину из результатов поиска")
         search_input = self.main_page.get_search_input()
         self.main_page.enter_search_value(search_input)
         cards = self.search_page.get_products_current_items([position])
@@ -61,6 +64,7 @@ class TestSearchAndCartFunctionality:
         )
     def test_check_search_input(self):
         """Проверка наличия поля для ввода поиска на главной странице."""
+        logger.info("Проверяем наличие поля для ввода поиска на главной странице")
         search_input = self.main_page.get_search_input()
         assert (
             search_input.is_displayed()
@@ -79,10 +83,12 @@ class TestSearchAndCartFunctionality:
 
     def test_check_search_results(self):
         """Проверка результатов поиска после ввода текста."""
+        logger.info(f"Проверяем результаты поиска после ввода текста '{search_value}'")
         search_input = self.main_page.get_search_input()
         with allure.step(
             f"Вводим текст '{search_value}' в поле поиска и проверяем результаты"
         ):
+            logger.info(f"Вводим текст '{search_value}' в поле поиска")
             self.main_page.enter_search_value(search_input)
             results = self.search_page.get_products_cards()
             assert results, f"По запросу '{search_value}' не найдено товаров."
@@ -111,10 +117,12 @@ class TestSearchAndCartFunctionality:
         )
     def test_check_add_to_cart_button(self):
         """Проверка наличия товаров в корзине после добавления."""
+        logger.info("Проверяем наличие товаров в корзине после добавления")
         for position in [2, 3]:
             with allure.step(
                 f"Добавляем в корзину товар из результата поиска с позицией {position}"
             ):
+                logger.info(f"Добавляем в корзину товар из результата поиска с позицией {position}")
                 self._add_product_to_cart_from_search(position)
                 self.main_page.open(main_page_url)
 
@@ -150,10 +158,12 @@ class TestSearchAndCartFunctionality:
         )
     def test_change_quantity_for_lowest(self):
         """Проверка изменения товаров в корзине после добавления."""
+        logger.info("Проверяем изменение товаров в корзине после добавления")
         for position in [2, 3]:
             with allure.step(
                 f"Добавляем в корзину товар из результата поиска с позицией {position}"
             ):
+                logger.info(f"Добавляем в корзину товар из результата поиска с позицией {position}")
                 self._add_product_to_cart_from_search(position)
                 self.main_page.open(main_page_url)
 

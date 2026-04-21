@@ -1,3 +1,4 @@
+import logging
 import allure
 import pytest
 import random
@@ -6,6 +7,7 @@ from data.urls import main_page_url
 from data.expected_data import expected_categories
 from data.mock_data import random_category
 
+logger = logging.getLogger(__name__)
 
 @allure.epic("UI Тесты")
 @allure.feature("Тест-кейсы на наличие элементов и их работоспособность")
@@ -31,9 +33,10 @@ class TestPositiveResult:
         Ожидаемый результат - Навигационная панель присутствует на странице и видима для пользователя."""
         )
     def test_get_navbar(self):
+        logger.info("Проверяем наличие навигационной панели")
         nav = self.main_page.get_navbar()
         assert nav.is_displayed(), "Не отображается панель навигационная"
-        
+
     @allure.title("Проверка наличия поля ввода поиска на главной странице")
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.description(
@@ -45,6 +48,7 @@ class TestPositiveResult:
         Ожидаемый результат - Поле ввода поиска присутствует на странице и видимо для пользователя."""
         )
     def test_get_search_input(self):
+        logger.info("Проверяем наличие поля ввода поиска на главной странице")
         search_input = self.main_page.get_search_input()
         assert search_input.is_displayed(), "Не отображается поле ввода поиска на главной странице"
 
@@ -63,6 +67,7 @@ class TestPositiveResult:
         )
     def test_get_filter(self):
         """Проверка наличия фильтра товаров."""
+        logger.info("Проверяем наличие фильтра товаров")
         category = random.choice(random_category)
         with allure.step("Переходим на страницу 1 из категорий"):
             self.main_page.click_category(category)
@@ -84,6 +89,7 @@ class TestPositiveResult:
         )
     def test_navbar_categories(self):
         """Проверка наличия категорий в навигационной панели."""
+        logger.info("Проверяем наличие категорий в навигационной панели")
         categories = self.main_page.get_navbar_items()
         for category in expected_categories:
             with allure.step(f"Проверяем наличие категории: {category}"):
@@ -103,6 +109,7 @@ class TestPositiveResult:
         )
     def test_click_random_category(self):
         """Проверка кликабельности категорий в навигационной панели."""
+        logger.info("Проверяем кликабельность категорий в навигационной панели")
         category = random.choice(random_category)
         with allure.step(f"Проверяем кликабельность категории: {category}"):
             self.main_page.click_category(category)
@@ -124,6 +131,7 @@ class TestPositiveResult:
         )
     def test_click_all_categories(self):
         """Проверка кликабельности каждой категории в навигационной панели."""
+        logger.info("Проверяем кликабельность всех категорий в навигационной панели")
         categories = self.main_page.get_navbar_items()
         
         for category in categories:
@@ -149,6 +157,7 @@ class TestPositiveResult:
         )
     def test_category_products(self):
         """Проверка наличия товаров на странице категории."""
+        logger.info("Проверяем наличие товаров на странице категории")
         category = random.choice(random_category)
         with allure.step(f"Проверяем наличие товаров в категории: {category}"):
             self.main_page.click_category(category)
@@ -170,6 +179,7 @@ class TestPositiveResult:
         )
     def test_sorting_products(self):
         """Проверка кликабельности сортировки товаров."""
+        logger.info("Проверяем кликабельность сортировки товаров")
         category = random.choice(random_category)
         with allure.step(f"Проверяем сортировку товаров в категории: {category}"):
             self.main_page.click_category(category)
