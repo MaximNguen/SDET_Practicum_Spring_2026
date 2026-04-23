@@ -6,7 +6,7 @@ import allure
 from typing import List
 
 from pages.base_page import BasePage
-from data.locators_search import SearchPageLocators as SPL
+from data.ui_data.locators_search import SearchPageLocators as SPL
 
 logger = logging.getLogger(__name__)
     

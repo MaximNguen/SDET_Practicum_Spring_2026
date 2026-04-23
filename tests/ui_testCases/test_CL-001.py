@@ -3,8 +3,8 @@ import pytest
 import random
 import logging
 
-from data.urls import main_page_url
-from data.expected_data import expected_categories
+from data.ui_data.urls import main_page_url
+from data.ui_data.expected_data import expected_categories
 
 logger = logging.getLogger(__name__)
 

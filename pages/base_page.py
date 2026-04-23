@@ -4,8 +4,8 @@ from typing import List
 import allure
 import logging
 
-from utils.waitHelpers import WaitHelpers as WH
-from utils.locatorUtils import LocatorUtils as LU
+from utils.ui.waitHelpers import WaitHelpers as WH
+from utils.ui.locatorUtils import LocatorUtils as LU
 
 logger = logging.getLogger(__name__)
 

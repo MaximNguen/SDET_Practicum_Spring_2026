@@ -6,11 +6,11 @@ from typing import List
 import random
 
 from pages.base_page import BasePage
-from data.locators_main import MainPageLocators as MPL
-from data.locators_items import ItemPageLocators as IPL
-from data.locators_product import ProductPageLocators as PPL
-from data.locators_cart import CartPageLocators as CPL
-from data.mock_data import search_value
+from data.ui_data.locators_main import MainPageLocators as MPL
+from data.ui_data.locators_items import ItemPageLocators as IPL
+from data.ui_data.locators_product import ProductPageLocators as PPL
+from data.ui_data.locators_cart import CartPageLocators as CPL
+from data.ui_data.mock_data import search_value
 
 logger = logging.getLogger(__name__)
     

@@ -6,7 +6,7 @@ import allure
 from typing import List
 
 from pages.base_page import BasePage
-from data.locators_items import ItemPageLocators as IPL
+from data.ui_data.locators_items import ItemPageLocators as IPL
 
 logger = logging.getLogger(__name__)
 

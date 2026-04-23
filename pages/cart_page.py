@@ -4,9 +4,9 @@ from typing import List
 from selenium.common.exceptions import TimeoutException
 import logging
 
-from data.locators_cart import CartPageLocators as CPL
+from data.ui_data.locators_cart import CartPageLocators as CPL
 from pages.base_page import BasePage
-from utils.stringUtils import StringUtils as SU
+from utils.ui.stringUtils import StringUtils as SU
 
 logger = logging.getLogger(__name__)
 

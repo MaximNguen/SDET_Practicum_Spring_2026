@@ -2,7 +2,7 @@ import allure
 import pytest
 import logging
 
-from data.urls import main_page_url, cart_page as cart_page_url
+from data.ui_data.urls import main_page_url, cart_page as cart_page_url
 
 logger = logging.getLogger(__name__)
 
