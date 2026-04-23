@@ -27,7 +27,7 @@ def validate_create_item_response(response_json: Mapping[str, Any]) -> ItemReque
         except Exception as e:
             logger.error(f"Ошибка валидации ответа при создании товара: {e}")
             raise ValueError(f"Ответ не соответствует схеме ItemRequestSchema: {e}")
-    
+
 def validate_get_item_response(response_json: Mapping[str, Any]) -> ItemResponseSchema:
     """Проверяет, что ответ при получении товара соответствует схеме ItemResponseSchema."""
     with allure.step("Проверяем, что ответ при получении товара соответствует схеме ItemResponseSchema"):   
@@ -37,7 +37,7 @@ def validate_get_item_response(response_json: Mapping[str, Any]) -> ItemResponse
         except Exception as e:
             logger.error(f"Ошибка валидации ответа при получении товара: {e}")
             raise ValueError(f"Ответ не соответствует схеме ItemResponseSchema: {e}")
-        
+
 def validate_get_all_items_response(response_json: Mapping[str, Any]) -> list[ItemResponseSchema]:
     """Проверяет, что ответ при получении всех товаров соответствует схеме ItemResponseSchema."""
     with allure.step("Проверяем, что ответ при получении всех товаров соответствует схеме ItemResponseSchema"):

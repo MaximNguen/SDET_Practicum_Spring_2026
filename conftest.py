@@ -87,7 +87,7 @@ def endpoint_factory():
     factory.clear_cache()
     
 @pytest.fixture
-def create_item(item_client: ItemClient):
+def create_item(endpoint_factory):
     """Фикстура для создания товара перед тестом и его удаления после."""
     create_endpoint = endpoint_factory.get("create")
     delete_endpoint = endpoint_factory.get("delete")

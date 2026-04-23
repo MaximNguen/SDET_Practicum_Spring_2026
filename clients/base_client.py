@@ -38,7 +38,7 @@ class BaseClient:
                     method=method,
                     url=url,
                     json=json,
-                    timeout=self.timeout_seconds,
+                    timeout=self.timeout,
                 )
             except requests.exceptions.RequestException as e:
                 logger.error(f"Ошибка при отправке запроса: {e}")

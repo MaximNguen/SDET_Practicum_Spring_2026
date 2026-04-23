@@ -30,7 +30,7 @@ def build_payload() -> Dict[str, Any]:
     payload["title"] = Generator.generate_random_string(10)
     payload["important_numbers"] = [Generator.generate_random_number(1, 100) for _ in range(3)]
     payload["verified"] = True
-    payload["additional_info"] = {
+    payload["addition"] = {
         "additional_info": Generator.generate_random_string(20),
         "additional_number": Generator.generate_random_number(1, 100)
     }
