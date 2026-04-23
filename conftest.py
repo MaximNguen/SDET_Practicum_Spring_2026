@@ -3,8 +3,13 @@ import pytest
 import allure
 from selenium.webdriver.chrome.options import Options
 
+from api.factory_endpoint.factory_endpoint import FactoryEndpoint
+from utils.api.api_validators import extract_item_id_from_create_response
+from clients.item_client import ItemClient
 from pages.factory_pages.page_factory import PageFactory
+from utils.api.payloads import build_payload
 
+# ============================ Фикстуры для тестов UI ============================
 
 @pytest.fixture()
 def driver():
@@ -68,6 +73,31 @@ def cart_page(page_factory):
     """Фикстура для страницы корзины."""
     return page_factory.cart_page
 
+# ============================ Конфигурация для тестов API ============================
+
+@pytest.fixture
+def item_client():
+    """Фикстура для клиента API."""
+    return ItemClient()
+
+@pytest.fixture
+def endpoint_factory():
+    factory = FactoryEndpoint()
+    yield factory
+    factory.clear_cache()
+    
+@pytest.fixture
+def create_item(item_client: ItemClient):
+    """Фикстура для создания товара перед тестом и его удаления после."""
+    create_endpoint = endpoint_factory.get("create")
+    delete_endpoint = endpoint_factory.get("delete")
+    
+    payload = build_payload()
+    item_id = create_endpoint.action(payload)
+    yield item_id
+    delete_endpoint.action(item_id)
+
+# ============================ Хук для прикрепления скриншота при падении теста ============================
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
