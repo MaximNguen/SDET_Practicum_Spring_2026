@@ -1,8 +1,9 @@
-# SDET_Practicum_FirstWeek
+# SDET_Practicum_Spring_2026
 
-Решение ТЗ первой недели практикума от SimbirSoft
+Решение заданий практикума от SimbirSoft
 
 <h2>Что использовалось и реализованно?</h2>
+<h3>Для UI Тестов</h3>
 <ul>
     <li>Язык - Python 3.10</li>
     <li>Инструменты - Selenium, Pytest, Pytest-Xdist, Allure</li>
