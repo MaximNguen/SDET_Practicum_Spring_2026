@@ -9,7 +9,7 @@ from utils.api.generators import Generator
 
 logger = logging.getLogger(__name__)
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = REPO_ROOT / "data" / "api_data" / "item_payloads.json"
 
 @allure.step("Загружаем полезную нагрузку из JSON-файла по имени")
@@ -24,16 +24,21 @@ def load_payload() -> Dict[str, Any]:
         raise
     
 @allure.step("Строим полезную нагрузку на основе шаблона из JSON-файла и дополнительных параметров")
-def build_payload() -> Dict[str, Any]:
-    """Строит полезную нагрузку на основе шаблона из JSON-файла и дополнительных параметров."""
-    payload = load_payload()
-    payload["title"] = Generator.generate_random_string(10)
-    payload["important_numbers"] = [Generator.generate_random_number(1, 100) for _ in range(3)]
-    payload["verified"] = True
-    payload["addition"] = {
+def build_payload(
+    title = Generator.generate_random_string(10),
+    nums = [Generator.generate_random_number(1, 100) for _ in range(3)],
+    verified = True,
+    addition = {
         "additional_info": Generator.generate_random_string(20),
         "additional_number": Generator.generate_random_number(1, 100)
     }
+) -> Dict[str, Any]:
+    """Строит полезную нагрузку на основе шаблона из JSON-файла и дополнительных параметров."""
+    payload = load_payload()
+    payload["title"] = title
+    payload["important_numbers"] = nums
+    payload["verified"] = verified
+    payload["addition"] = addition
     try:
         validate_create_item_response(payload)
         return payload

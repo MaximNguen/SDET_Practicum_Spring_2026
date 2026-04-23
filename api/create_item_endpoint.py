@@ -13,10 +13,10 @@ class CreateItemEndpoint(BaseEndpoint):
 
     @allure.step("Создаем новый товар с данными: {item_data}")
     def action(self, item_data: Dict[str, Any]) -> Dict[str, Any]:
+        validate_create_item_response(item_data)
         logger.info(f"Создаем новый товар с данными: {item_data}")
         self.response = self.session.post(self.create_url, json=item_data)
         self.response_json = self.response.json()
-        validate_create_item_response(self.response_json)
         return self.response_json
     
     @allure.step("Создание нового объекта с ошибкой (expecting error)")
