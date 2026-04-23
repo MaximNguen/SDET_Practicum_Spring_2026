@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 import requests
 import logging
+import allure
 
 from config import BASE_URL, TIMEOUT_SECONDS, HEADERS
 
@@ -30,14 +31,15 @@ class BaseClient:
     ) -> requests.Response:
         """Отправка запроса и принятие ответа"""
         url = f"{self.base_url}{path}"
-        logger.info(f"Отправляем {method} запрос на URL: {url}{path} с данными: {json}")
-        try:
-            return self.session.request(
-                method=method,
-                url=url,
-                json=json,
-                timeout=self.timeout_seconds,
-            )
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Ошибка при отправке запроса: {e}")
-            raise
+        with allure.step(f"Отправляем {method} запрос на URL: {url}{path} с данными: {json}"):
+            logger.info(f"Отправляем {method} запрос на URL: {url}{path} с данными: {json}")
+            try:
+                return self.session.request(
+                    method=method,
+                    url=url,
+                    json=json,
+                    timeout=self.timeout_seconds,
+                )
+            except requests.exceptions.RequestException as e:
+                logger.error(f"Ошибка при отправке запроса: {e}")
+                raise
