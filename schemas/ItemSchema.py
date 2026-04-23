@@ -1,5 +1,6 @@
 from typing import List
 import logging
+import allure
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,7 @@ class ItemRequestSchema(BaseModel):
     
     @field_validator("important_numbers")
     @classmethod
+    @allure.step("Проверяем, что список важных чисел не пустой")
     def validate_important_numbers(cls, v: List[int]) -> List[int]:
         if not v:
             logger.error("Список важных чисел не может быть пустым")
@@ -23,6 +25,7 @@ class ItemRequestSchema(BaseModel):
 
     @field_validator("title")
     @classmethod
+    @allure.step("Проверяем, что название объекта не пустое и не состоит только из пробелов")
     def validate_title(cls, v: str) -> str:
         if not v.strip():
             logger.error("Название объекта не может быть пустым или состоять только из пробелов")
@@ -31,6 +34,7 @@ class ItemRequestSchema(BaseModel):
     
     @field_validator("addition")
     @classmethod
+    @allure.step("Проверяем, что дополнительные данные не пустые")
     def validate_addition(cls, v: AdditionRequestSchema) -> AdditionRequestSchema:
         if not v.additional_info.strip():
             logger.error("Дополнительная информация не может быть пустой или состоять только из пробелов")
@@ -60,6 +64,7 @@ class ItemResponseSchema(BaseModel):
     
     @field_validator("important_numbers")
     @classmethod
+    @allure.step("Проверяем, что список важных чисел не пустой")
     def validate_important_numbers(cls, v: List[int]) -> List[int]:
         if not v:
             logger.error("Список важных чисел не может быть пустым")
@@ -68,6 +73,7 @@ class ItemResponseSchema(BaseModel):
     
     @field_validator("title")
     @classmethod
+    @allure.step("Проверяем, что название объекта не пустое и не состоит только из пробелов")
     def validate_title(cls, v: str) -> str:
         if not v.strip():
             logger.error("Название объекта не может быть пустым или состоять только из пробелов")
@@ -76,6 +82,7 @@ class ItemResponseSchema(BaseModel):
     
     @field_validator("addition")
     @classmethod
+    @allure.step("Проверяем, что дополнительные данные не пустые")
     def validate_addition(cls, v: AdditionRequestSchema) -> AdditionRequestSchema:
         if not v.additional_info.strip():
             logger.error("Дополнительная информация не может быть пустой или состоять только из пробелов")
