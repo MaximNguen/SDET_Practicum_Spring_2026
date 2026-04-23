@@ -1,5 +1,8 @@
 from typing import List
+import logging
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+logger = logging.getLogger(__name__)
 
 class ItemRequestSchema(BaseModel):
     """Схема для создания и обновления товара."""
@@ -14,6 +17,7 @@ class ItemRequestSchema(BaseModel):
     @classmethod
     def validate_important_numbers(cls, v: List[int]) -> List[int]:
         if not v:
+            logger.error("Список важных чисел не может быть пустым")
             raise ValueError("Список важных чисел не может быть пустым")
         return v
 
@@ -21,6 +25,7 @@ class ItemRequestSchema(BaseModel):
     @classmethod
     def validate_title(cls, v: str) -> str:
         if not v.strip():
+            logger.error("Название объекта не может быть пустым или состоять только из пробелов")
             raise ValueError("Название объекта не может быть пустым или состоять только из пробелов")
         return v
     
@@ -28,8 +33,10 @@ class ItemRequestSchema(BaseModel):
     @classmethod
     def validate_addition(cls, v: AdditionRequestSchema) -> AdditionRequestSchema:
         if not v.additional_info.strip():
+            logger.error("Дополнительная информация не может быть пустой или состоять только из пробелов")
             raise ValueError("Дополнительная информация не может быть пустой или состоять только из пробелов")
         if len(str(v.additional_number)) == 0:
+            logger.error("Дополнительное число не может быть пустым")
             raise ValueError("Дополнительное число не может быть пустым")
         return v
     
@@ -55,6 +62,7 @@ class ItemResponseSchema(BaseModel):
     @classmethod
     def validate_important_numbers(cls, v: List[int]) -> List[int]:
         if not v:
+            logger.error("Список важных чисел не может быть пустым")
             raise ValueError("Список важных чисел не может быть пустым")
         return v
     
@@ -62,6 +70,7 @@ class ItemResponseSchema(BaseModel):
     @classmethod
     def validate_title(cls, v: str) -> str:
         if not v.strip():
+            logger.error("Название объекта не может быть пустым или состоять только из пробелов")
             raise ValueError("Название объекта не может быть пустым или состоять только из пробелов")
         return v
     
@@ -69,8 +78,10 @@ class ItemResponseSchema(BaseModel):
     @classmethod
     def validate_addition(cls, v: AdditionRequestSchema) -> AdditionRequestSchema:
         if not v.additional_info.strip():
+            logger.error("Дополнительная информация не может быть пустой или состоять только из пробелов")
             raise ValueError("Дополнительная информация не может быть пустой или состоять только из пробелов")
         if len(str(v.additional_number)) == 0:
+            logger.error("Дополнительное число не может быть пустым")
             raise ValueError("Дополнительное число не может быть пустым")
         return v
 
