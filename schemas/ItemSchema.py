@@ -1,9 +1,30 @@
+from __future__ import annotations
+
 from typing import List
 import logging
 import allure
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 logger = logging.getLogger(__name__)
+
+class AdditionResponseSchema(BaseModel):
+    """Схема для поля addition в ответе."""
+    model_config = ConfigDict(extra="allow", strict=True, populate_by_name=True)
+    
+    id: int = Field(..., description="Уникальный идентификатор дополнительных данных", ge=0)
+    additional_info: str = Field(..., description="Дополнительная информация", min_length=1)
+    additional_number: int = Field(..., description="Дополнительное число", ge=0)
+    
+class ItemsListResponseSchema(BaseModel):
+    """Схема для ответа со списком объектов."""
+    entity: List[ItemResponseSchema] = Field(..., description="Список объектов")
+    
+class AdditionRequestSchema(BaseModel):
+    """Схема для поля addition."""
+    model_config = ConfigDict(extra="allow", strict=True, populate_by_name=True)
+    
+    additional_info: str = Field(..., description="Дополнительная информация", min_length=1)
+    additional_number: int = Field(..., description="Дополнительное число", ge=0)
 
 class ItemRequestSchema(BaseModel):
     """Схема для создания и обновления товара."""
@@ -44,14 +65,6 @@ class ItemRequestSchema(BaseModel):
             raise ValueError("Дополнительное число не может быть пустым")
         return v
     
-
-class AdditionRequestSchema(BaseModel):
-    """Схема для поля addition."""
-    model_config = ConfigDict(extra="allow", strict=True, populate_by_name=True)
-    
-    additional_info: str = Field(..., description="Дополнительная информация", min_length=1)
-    additional_number: int = Field(..., description="Дополнительное число", ge=0)
-    
 class ItemResponseSchema(BaseModel):
     """Схема для ответа при получении товара."""
     model_config = ConfigDict(extra="allow", strict=True, populate_by_name=True)
@@ -91,15 +104,3 @@ class ItemResponseSchema(BaseModel):
             logger.error("Дополнительное число не может быть пустым")
             raise ValueError("Дополнительное число не может быть пустым")
         return v
-
-class AdditionResponseSchema(BaseModel):
-    """Схема для поля addition в ответе."""
-    model_config = ConfigDict(extra="allow", strict=True, populate_by_name=True)
-    
-    id: int = Field(..., description="Уникальный идентификатор дополнительных данных", ge=0)
-    additional_info: str = Field(..., description="Дополнительная информация", min_length=1)
-    additional_number: int = Field(..., description="Дополнительное число", ge=0)
-    
-class ItemsListResponseSchema(BaseModel):
-    """Схема для ответа со списком объектов."""
-    entity: List[ItemResponseSchema] = Field(..., description="Список объектов")
