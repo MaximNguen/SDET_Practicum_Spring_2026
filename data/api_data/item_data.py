@@ -12,3 +12,4 @@ class ItemData:
         "title": "Заголовок сущности",
         "verified": True
         }
+    expected_fields = ["addition", "important_numbers", "title", "verified"]
