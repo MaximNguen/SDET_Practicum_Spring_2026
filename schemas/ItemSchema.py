@@ -82,3 +82,7 @@ class AdditionResponseSchema(BaseModel):
     id: int = Field(..., description="Уникальный идентификатор дополнительных данных", ge=0)
     additional_info: str = Field(..., description="Дополнительная информация", min_length=1)
     additional_number: int = Field(..., description="Дополнительное число", ge=0)
+    
+class ItemsListResponseSchema(BaseModel):
+    """Схема для ответа со списком объектов."""
+    entity: List[ItemResponseSchema] = Field(..., description="Список объектов")
