@@ -58,8 +58,8 @@ jobs:
       - name: Start API service
         run: |
           cd api-service
-          docker-compose down -v 2>/dev/null || true
-          docker-compose up --build -d
+          docker compose down -v 2>/dev/null || true
+          docker compose up --build -d
           echo "Waiting for services to start..."
           sleep 15
           echo "=== Docker containers ==="
@@ -69,13 +69,13 @@ jobs:
         run: |
           cd api-service
           echo "=== Checking migration logs ==="
-          docker-compose logs migrate
+          docker compose logs migrate
           echo ""
           echo "=== Checking PostgreSQL ==="
-          docker-compose exec postgres pg_isready -U postgres
+          docker compose exec postgres pg_isready -U postgres
           echo ""
           echo "=== Checking database tables ==="
-          docker-compose exec postgres psql -U postgres -d postgres -c "\dt"
+          docker compose exec postgres psql -U postgres -d postgres -c "\dt"
       
       - name: Wait for API to be ready
         run: |
@@ -92,7 +92,7 @@ jobs:
             if [ "$HTTP_CODE" = "500" ] || [ "$HTTP_CODE" = "404" ]; then
               echo "⚠️ API responding with $HTTP_CODE, checking logs..."
               cd api-service
-              docker-compose logs service --tail=10
+              docker compose logs service --tail=10
               cd ..
             fi
             
@@ -102,7 +102,7 @@ jobs:
           echo "❌ API did not become ready"
           cd api-service
           echo "=== Full service logs ==="
-          docker-compose logs service
+          docker compose logs service
           exit 1
       
       - name: Debug API endpoints
