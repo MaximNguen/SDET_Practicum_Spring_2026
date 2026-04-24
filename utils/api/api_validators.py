@@ -1,5 +1,5 @@
-from typing import Any, Mapping, cast
-from pydantic import TypeAdapter, ValidationError
+from typing import Any, Mapping
+from pydantic import BaseModel, ValidationError
 import allure
 import logging
 
@@ -7,12 +7,27 @@ logger = logging.getLogger(__name__)
 
 from schemas.ItemSchema import ItemResponseSchema, ItemRequestSchema, ItemsListResponseSchema
 
+
+def deserialize_create_item_payload(payload: Mapping[str, Any]) -> ItemRequestSchema:
+    """Десериализует payload в модель ItemRequestSchema."""
+    return ItemRequestSchema.from_dict(payload)
+
+
+def deserialize_get_item_response(response_json: Mapping[str, Any]) -> ItemResponseSchema:
+    """Десериализует ответ API в модель ItemResponseSchema."""
+    return ItemResponseSchema.from_dict(response_json)
+
+
+def deserialize_get_all_items_response(response_json: Mapping[str, Any]) -> ItemsListResponseSchema:
+    """Десериализует ответ API со списком объектов в модель ItemsListResponseSchema."""
+    return ItemsListResponseSchema.from_dict(response_json)
+
 def extract_item_id_from_create_response(response_json: Mapping[str, Any]) -> int:
     """Извлекает ID товара из ответа при его создании."""
     with allure.step("Извлекаем ID товара из ответа при его создании"):
         try:
             logger.info(f"Извлекаем ID из ответа: {response_json}, используя схему ItemResponseSchema")
-            item_response = TypeAdapter(ItemResponseSchema).validate_python(response_json)
+            item_response = deserialize_get_item_response(response_json)
             return item_response.id
         except Exception as e:
             logger.error(f"Не удалось извлечь ID из ответа: {e}")
@@ -23,7 +38,7 @@ def validate_create_item_response(response_json: Mapping[str, Any]) -> ItemReque
     with allure.step("Проверяем, что ответ при создании товара соответствует схеме ItemRequestSchema"):
         logger.info(f"Проверяем ответ при создании товара: {response_json}, используя схему ItemRequestSchema")
         try:
-            return TypeAdapter(ItemRequestSchema).validate_python(response_json)
+            return deserialize_create_item_payload(response_json)
         except Exception as e:
             logger.error(f"Ошибка валидации ответа при создании товара: {e}")
             raise ValueError(f"Ответ не соответствует схеме ItemRequestSchema: {e}")
@@ -33,7 +48,7 @@ def validate_get_item_response(response_json: Mapping[str, Any]) -> ItemResponse
     with allure.step("Проверяем, что ответ при получении товара соответствует схеме ItemResponseSchema"):   
         logger.info(f"Проверяем ответ при получении товара: {response_json}, используя схему ItemResponseSchema")
         try:
-            return TypeAdapter(ItemResponseSchema).validate_python(response_json)
+            return deserialize_get_item_response(response_json)
         except Exception as e:
             logger.error(f"Ошибка валидации ответа при получении товара: {e}")
             raise ValueError(f"Ответ не соответствует схеме ItemResponseSchema: {e}")
@@ -43,7 +58,7 @@ def validate_get_all_items_response(response_json: Mapping[str, Any]) -> list[It
     with allure.step("Проверяем, что ответ при получении всех товаров соответствует схеме ItemResponseSchema"):
         logger.info(f"Проверяем ответ при получении всех товаров: {response_json}, используя схему ItemResponseSchema")
         try:
-            validated_response = TypeAdapter(ItemsListResponseSchema).validate_python(response_json)
+            validated_response = deserialize_get_all_items_response(response_json)
             logger.info(f"Успешно валидировано {len(validated_response.entity)} объектов")
             return validated_response.entity
         except ValidationError as e:

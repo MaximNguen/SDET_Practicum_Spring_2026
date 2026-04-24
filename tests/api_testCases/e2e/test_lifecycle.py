@@ -50,8 +50,7 @@ class TestItemLifecycle:
 
         payload = build_payload()
         validate_create_item_response(payload)
-        created_item = create_endpoint.action(payload)
-        item_id = self._extract_item_id(created_item)
+        item_id = create_endpoint.action(payload)
         logger.info("Новый объект успешно создан и получен по ID: %s", item_id)
         
         response_json = get_endpoint.action(item_id)
