@@ -6,7 +6,6 @@ allure-results
 allure-report
 *.log
 *.xml
-*.json
 *.html
 *.csv
 *.sqlite
