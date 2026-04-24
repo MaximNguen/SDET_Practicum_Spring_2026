@@ -2,7 +2,6 @@ import allure
 import logging
 
 from clients.item_client import ItemClient
-from conftest import item_client
 from utils.api.api_validators import validate_get_item_response, validate_create_item_response
 from utils.api.payloads import build_payload
 

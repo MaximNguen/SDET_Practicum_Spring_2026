@@ -19,5 +19,4 @@ class DeleteItemEndpoint(BaseEndpoint):
         """Удаляем товар с ID: {item_id}, ожидая ошибку с кодом {expected_code}"""
         logger.info(f"Удаляем товар с ID: {item_id}, ожидая ошибку с кодом {expected_code}")
         self.response = self.session.delete(f"{self.delete_url}{item_id}")
-        return self.check_status_code(expected_code)
-    
+        return self.check_status_code(expected_code) 
