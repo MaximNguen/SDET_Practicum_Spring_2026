@@ -49,8 +49,10 @@ jobs:
           POSTGRES_USER=postgres
           POSTGRES_PASSWORD=postgres
           POSTGRES_DB=postgres
+          POSTGRES_HOST=postgres
           POSTGRES_PORT=5432
           HTTP_PORT=8080
+          LOGGER_FORMAT=text
           EOF
           echo "=== .env file created ==="
           cat .env
@@ -64,6 +66,26 @@ jobs:
           sleep 15
           echo "=== Docker containers ==="
           docker ps -a
+
+      - name: Wait for migrations to complete
+        run: |
+          cd api-service
+          MIGRATE_CONTAINER_ID=$(docker compose ps -q migrate)
+          if [ -z "$MIGRATE_CONTAINER_ID" ]; then
+            echo "❌ Migrate container not found"
+            docker compose logs migrate
+            exit 1
+          fi
+
+          MIGRATE_EXIT_CODE=$(docker wait "$MIGRATE_CONTAINER_ID")
+          echo "Migration exit code: $MIGRATE_EXIT_CODE"
+          docker logs "$MIGRATE_CONTAINER_ID" || true
+
+          if [ "$MIGRATE_EXIT_CODE" != "0" ]; then
+            echo "❌ Migration failed"
+            exit 1
+          fi
+          echo "✅ Migration completed"
       
       - name: Check migration status
         run: |
@@ -80,22 +102,14 @@ jobs:
       - name: Wait for API to be ready
         run: |
           for i in {1..40}; do
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/getAll 2>/dev/null || echo "000")
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/time 2>/dev/null || echo "000")
             echo "Attempt $i/40: HTTP $HTTP_CODE"
             
             if [ "$HTTP_CODE" = "200" ]; then
               echo "✅ API is ready!"
               exit 0
             fi
-            
-            # Если сервис отвечает, но с ошибкой - все равно продолжаем
-            if [ "$HTTP_CODE" = "500" ] || [ "$HTTP_CODE" = "404" ]; then
-              echo "⚠️ API responding with $HTTP_CODE, checking logs..."
-              cd api-service
-              docker compose logs service --tail=10
-              cd ..
-            fi
-            
+
             sleep 2
           done
           
@@ -127,4 +141,4 @@ jobs:
         if: always()
         run: |
           cd api-service
-          docker-compose down -v
+          docker compose down -v
