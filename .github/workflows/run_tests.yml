@@ -8,57 +8,51 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checking repository
+        uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-          cache: pip
+      - name: Install Chrome
+        run: sudo apt-get update && sudo apt-get install -y google-chrome-stable
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run UI tests
+      - name: Run tests
         run: pytest tests/ui_testCases -v -n auto
         
   API-Tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checking repository
+        uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-          cache: pip
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Checkout API service repository
-        uses: actions/checkout@v4
+          pip install -r requirements.txt     
+      - name: Checking repository API-service
+        uses: actions/checkout@v3
         with:
           repository: sun6r0/test-service
           path: api-service
+      - name: Install docker-compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose 
+          curl -v http://localhost:8080/ || echo "API не отвечает"
       - name: Start API service
         run: |
-          docker compose -f api-service/docker-compose.yaml up --build -d
-      - name: Wait for API readiness
-        run: |
-          for i in {1..20}; do
-            if curl -fsS http://localhost:8080/ > /dev/null; then
-              echo "API is ready"
-              exit 0
-            fi
-            echo "Waiting for API..."
-            sleep 3
-          done
-          echo "API is not ready"
-          exit 1
-      - name: Run API tests
-        run: |
+          cd api-service
+          docker-compose up --build -d
+          docker ps
+          docker compose logs
+          sleep 10
+      - name: Run tests
+        run: 
           pytest tests/api_testCases -v -n auto
-      - name: Stop API service
-        if: always()
-        run: docker compose -f api-service/docker-compose.yaml down -v
