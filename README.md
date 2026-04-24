@@ -300,6 +300,175 @@
 </table>
 
 <h1>Задание 2 - Тестирование API сервиса из другой репозитории</h1>
+<h2>Endpoints API</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <td><strong>Метод</strong></td>
+        <td><strong>Эндпоинт</strong></td>
+        <td><strong>Описание</strong></td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/api/create</td>
+        <td>Создание нового объекта</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/api/getAll</td>
+        <td>Получение всех объектов</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/api/get/{id}</td>
+        <td>Получение объекта по Id</td>
+    </tr>
+    <tr>
+        <td>PATCH</td>
+        <td>/api/patch/{id}</td>
+        <td>Частичное обновление объекта</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/api/delete/{id}</td>
+        <td>Удаление сущности по ID</td>
+    </tr>
+</table>
+
+<h2>Модели данных (Схемы для валидации)</h2>
+<h3>ItemRequestSchema - Модель для создания и обновления объекта</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <td><strong>Поле</strong></td>
+        <td><strong>Тип</strong></td>
+        <td><strong>Обязательное</strong></td>
+        <td><strong>Описание</strong></td>
+        <td><strong>Валидация</strong></td>
+    </tr>
+    <tr>
+        <td>verified</td>
+        <td>bool</td>
+        <td>True</td>
+        <td>Подтверждение объекта</td>
+        <td>Не пустое</td>
+    </tr>
+     <tr>
+        <td>important_numbers</td>
+        <td>List[int]</td>
+        <td>True</td>
+        <td>Список чисел объекта</td>
+        <td>Не пустое, числа больше 0</td>
+    </tr>
+     <tr>
+        <td>addition</td>
+        <td>AdditionRequest</td>
+        <td>True</td>
+        <td>Дополнительная информация объекта</td>
+        <td>Не пустое</td>
+    </tr>
+</table>
+
+<h3>ItemResponseSchema - Модель для получения объекта</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <td><strong>Поле</strong></td>
+        <td><strong>Тип</strong></td>
+        <td><strong>Описание</strong></td>
+        <td><strong>Валидация</strong></td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>Идентификатор объекта</td>
+        <td>Не пустое</td>
+    </tr>
+    <tr>
+        <td>verified</td>
+        <td>bool</td>
+        <td>Подтверждение объекта</td>
+        <td>Не пустое</td>
+    </tr>
+     <tr>
+        <td>important_numbers</td>
+        <td>List[int]</td>
+        <td>Список чисел объекта</td>
+        <td>Не пустое, числа больше 0</td>
+    </tr>
+     <tr>
+        <td>addition</td>
+        <td>AdditionRequest</td>
+        <td>Дополнительная информация объекта</td>
+        <td>Не пустое</td>
+    </tr>
+</table>
+
+<h3>ItemsListResponseSchema - Модель для получения список объектов</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <td><strong>Поле</strong></td>
+        <td><strong>Тип</strong></td>
+        <td><strong>Описание</strong></td>
+        <td><strong>Валидация</strong></td>
+    </tr>
+    <tr>
+        <td>entity</td>
+        <td>List[ItemResponseSchema]</td>
+        <td>Список объектов</td>
+        <td>Не пустое</td>
+    </tr>
+</table>
+
+<h3>AdditionRequestSchema - Модель для созданий и обновления дополнительной информации объекта</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <td><strong>Поле</strong></td>
+        <td><strong>Тип</strong></td>
+        <td><strong>Обязательное</strong></td>
+        <td><strong>Описание</strong></td>
+        <td><strong>Валидация</strong></td>
+    </tr>
+    <tr>
+        <td>additional_info</td>
+        <td>string</td>
+        <td>True</td>
+        <td>Дополнительная информация объекта</td>
+        <td>Не пустое</td>
+    </tr>
+    <tr>
+        <td>additional_number</td>
+        <td>int</td>
+        <td>True</td>
+        <td>Дополнительная информация числа объекта</td>
+        <td>Не пустое, больше 0</td>
+    </tr>
+</table>
+
+<h3>AdditionResponseSchema - Модель для получения дополнительной информации объекта</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <td><strong>Поле</strong></td>
+        <td><strong>Тип</strong></td>
+        <td><strong>Описание</strong></td>
+        <td><strong>Валидация</strong></td>
+    </tr>
+    <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>Идентификатор дополнительной информации объекта</td>
+        <td>Не пустое</td>
+    </tr>
+    <tr>
+        <td>additional_info</td>
+        <td>string</td>
+        <td>Дополнительная информация объекта</td>
+        <td>Не пустое</td>
+    </tr>
+    <tr>
+        <td>additional_number</td>
+        <td>int</td>
+        <td>Дополнительная информация числа объекта</td>
+        <td>Не пустое, больше 0</td>
+    </tr>
+</table>
 
 <h2>Установка и запуск</h2>
 <ol>
