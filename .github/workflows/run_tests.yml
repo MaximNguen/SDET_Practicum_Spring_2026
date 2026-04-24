@@ -45,7 +45,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose 
-          curl -v http://localhost:8080/ || echo "API не отвечает"
       - name: Start API service
         run: |
           cd api-service
@@ -57,7 +56,7 @@ jobs:
         run: |
           # Try for ~60 seconds (30 * 2s)
           for i in {1..30}; do
-            if curl -fsS http://localhost:8080/ > /dev/null; then
+            if curl -fsS http://localhost:8080/api/getAll > /dev/null; then
               echo "API is up"
               exit 0
             fi
