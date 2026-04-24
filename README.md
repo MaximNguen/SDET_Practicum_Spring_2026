@@ -4,8 +4,6 @@
 
 <h2>Что использовалось и реализованно?</h2>
 <h3>Для UI Тестов</h3>
-=======
-
 <ul>
     <li>Язык - Python 3.10</li>
     <li>Инструменты - Selenium, Pytest, Pytest-Xdist, Allure</li>
