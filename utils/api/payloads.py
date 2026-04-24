@@ -2,7 +2,7 @@ import json
 import logging
 import allure
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from utils.api.api_validators import validate_create_item_response
 from utils.api.generators import Generator
@@ -25,20 +25,20 @@ def load_payload() -> Dict[str, Any]:
     
 @allure.step("Строим полезную нагрузку на основе шаблона из JSON-файла и дополнительных параметров")
 def build_payload(
-    title = Generator.generate_random_string(10),
-    nums = [Generator.generate_random_number(1, 100) for _ in range(3)],
-    verified = True,
-    addition = {
+    title: Optional[str] = None,
+    nums: Optional[List[int]] = None,
+    verified: bool = True,
+    addition: Optional[Dict] = None
+) -> Dict[str, Any]:
+    """Создает полезную нагрузку на основе шаблона из JSON-файла и дополнительных параметров."""
+    payload = load_payload()
+    payload["title"] = title or Generator.generate_random_string(10)
+    payload["important_numbers"] = nums or [Generator.generate_random_number(1, 100) for _ in range(3)]
+    payload["verified"] = verified
+    payload["addition"] = addition or {
         "additional_info": Generator.generate_random_string(20),
         "additional_number": Generator.generate_random_number(1, 100)
     }
-) -> Dict[str, Any]:
-    """Строит полезную нагрузку на основе шаблона из JSON-файла и дополнительных параметров."""
-    payload = load_payload()
-    payload["title"] = title
-    payload["important_numbers"] = nums
-    payload["verified"] = verified
-    payload["addition"] = addition
     try:
         validate_create_item_response(payload)
         return payload
