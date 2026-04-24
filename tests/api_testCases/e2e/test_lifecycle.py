@@ -71,10 +71,10 @@ class TestItemLifecycle:
         response_json_updated = get_endpoint.action(item_id)
         validate_get_item_response(response_json_updated)
         assert response_json_updated["title"] == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {response_json_updated['title']}"
-        assert response_json_updated["verified"] == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {response_json_updated['verified']}"
-        assert response_json_updated["important_numbers"] == payload["important_numbers"], f"Ожидались числа: {payload['important_numbers']}, но получены: {response_json_updated['important_numbers']}"
-        assert response_json_updated["addition"]["additional_info"] == payload["addition"]["additional_info"], f"Ожидалось добавление: {payload['addition']['additional_info']}, но получено: {response_json_updated['addition']['additional_info']}"
-        assert response_json_updated["addition"]["additional_number"] == payload["addition"]["additional_number"], f"Ожидалось добавление: {payload['addition']['additional_number']}, но получено: {response_json_updated['addition']['additional_number']}"
+        assert response_json_updated["verified"] == new_payload["verified"], f"Ожидался статус: {new_payload['verified']}, но получен: {response_json_updated['verified']}"
+        assert response_json_updated["important_numbers"] == new_payload["important_numbers"], f"Ожидались числа: {new_payload['important_numbers']}, но получены: {response_json_updated['important_numbers']}"
+        assert response_json_updated["addition"]["additional_info"] == new_payload["addition"]["additional_info"], f"Ожидалось добавление: {new_payload['addition']['additional_info']}, но получено: {response_json_updated['addition']['additional_info']}"
+        assert response_json_updated["addition"]["additional_number"] == new_payload["addition"]["additional_number"], f"Ожидалось добавление: {new_payload['addition']['additional_number']}, но получено: {response_json_updated['addition']['additional_number']}"
         assert response_json_updated["id"] == response_json_updated["addition"]["id"], f"Ожидалось совпадение ID: {response_json_updated['id']} и ID в добавлении: {response_json_updated['addition']['id']}, но получено: {response_json_updated['addition']['id']}"
         
         delete_response = delete_endpoint.action(item_id)
