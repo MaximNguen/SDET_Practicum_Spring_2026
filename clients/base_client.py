@@ -31,8 +31,8 @@ class BaseClient:
     ) -> requests.Response:
         """Отправка запроса и принятие ответа"""
         url = f"{self.base_url}{path}"
-        with allure.step(f"Отправляем {method} запрос на URL: {url}{path} с данными: {json}"):
-            logger.info(f"Отправляем {method} запрос на URL: {url}{path} с данными: {json}")
+        with allure.step(f"Отправляем {method} запрос на URL: {url} с данными: {json}"):
+            logger.info(f"Отправляем {method} запрос на URL: {url} с данными: {json}")
             try:
                 return self.session.request(
                     method=method,
