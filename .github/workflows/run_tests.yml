@@ -25,13 +25,9 @@ jobs:
         
   API-Tests:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checking repository
         uses: actions/checkout@v3
-        with:
-          repository: sun6r0/test-service
-          path: api-service
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -40,6 +36,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Checking repository API-service
+        uses: actions/checkout@v3
+        with:
+          repository: sun6r0/test-service
+          path: api-service
       - name: Start API service
         run: |
           cd api-service
@@ -47,5 +48,4 @@ jobs:
           sleep 10
       - name: Run tests
         run: 
-          cd ..
           pytest tests/api_testCases -v -n auto
