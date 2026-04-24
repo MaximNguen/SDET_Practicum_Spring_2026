@@ -14,3 +14,4 @@ allure-report
 *.pyd
 .pytest_cache
 .coverage
+api-service-external

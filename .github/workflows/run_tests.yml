@@ -41,6 +41,14 @@ jobs:
         with:
           repository: sun6r0/test-service
           path: api-service
+
+      - name: Patch API compose migration command
+        run: |
+          cd api-service
+          # Upstream compose requests 3 migrations, but repo currently has only 2.
+          sed -i 's/"up", "3"/"up"/g' docker-compose.yaml
+          echo "=== Patched migrate command ==="
+          grep -n "command:" docker-compose.yaml
       
       - name: Create .env file for API service
         run: |
@@ -70,9 +78,9 @@ jobs:
       - name: Wait for migrations to complete
         run: |
           cd api-service
-          MIGRATE_CONTAINER_ID=$(docker compose ps -q migrate)
+          MIGRATE_CONTAINER_ID=$(docker compose ps -q --all migrate | head -n 1)
           if [ -z "$MIGRATE_CONTAINER_ID" ]; then
-            echo "❌ Migrate container not found"
+            echo "Migrate container not found"
             docker compose logs migrate
             exit 1
           fi
@@ -82,10 +90,10 @@ jobs:
           docker logs "$MIGRATE_CONTAINER_ID" || true
 
           if [ "$MIGRATE_EXIT_CODE" != "0" ]; then
-            echo "❌ Migration failed"
+            echo "Migration failed"
             exit 1
           fi
-          echo "✅ Migration completed"
+          echo "Migration completed"
       
       - name: Check migration status
         run: |
@@ -98,6 +106,25 @@ jobs:
           echo ""
           echo "=== Checking database tables ==="
           docker compose exec postgres psql -U postgres -d postgres -c "\dt"
+
+      - name: Verify API service container state
+        run: |
+          cd api-service
+          SERVICE_CONTAINER_ID=$(docker compose ps -q --all service | head -n 1)
+          if [ -z "$SERVICE_CONTAINER_ID" ]; then
+            echo "Service container not found"
+            docker compose ps --all
+            exit 1
+          fi
+
+          SERVICE_STATE=$(docker inspect -f '{{.State.Status}}' "$SERVICE_CONTAINER_ID")
+          echo "Service state: $SERVICE_STATE"
+
+          if [ "$SERVICE_STATE" != "running" ]; then
+            echo "Service is not running, dumping logs"
+            docker logs "$SERVICE_CONTAINER_ID" || true
+            exit 1
+          fi
       
       - name: Wait for API to be ready
         run: |
@@ -106,14 +133,14 @@ jobs:
             echo "Attempt $i/40: HTTP $HTTP_CODE"
             
             if [ "$HTTP_CODE" = "200" ]; then
-              echo "✅ API is ready!"
+              echo "API is ready"
               exit 0
             fi
 
             sleep 2
           done
           
-          echo "❌ API did not become ready"
+          echo "API did not become ready"
           cd api-service
           echo "=== Full service logs ==="
           docker compose logs service
