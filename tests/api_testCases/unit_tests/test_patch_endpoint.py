@@ -1,0 +1,55 @@
+import allure
+import logging
+
+from clients.item_client import ItemClient
+from utils.api.payloads import build_payload
+from utils.api.api_validators import validate_get_item_response, validate_create_item_response
+
+logger = logging.getLogger(__name__)
+
+@allure.epic("API Tests - Patch Item Endpoint")
+@allure.feature("Patch Item by ID")
+class TestPatchItemEndpoint:
+    """Тесты для эндпоинта частичного обновления объекта по ID."""
+    
+    @allure.title("Успешное частичное обновление объекта по ID")
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.description(
+        """Проверка успешного частичного обновления объекта по ID.\n
+        Предусловие - Создать новый объект через API и получить его ID.\n
+        Шаги:\n
+        1. Создать новый объект через API и получить его ID.\n
+        2. Подготовить данные для частичного обновления (например, изменить только одно поле).\n
+        3. Отправить запрос на частичное обновление объекта по ID с подготовленными данными.\n
+        4. Проверить, что статус код ответа 200.\n
+        5. Отправить запрос на получение объекта по тому же ID и убедиться, что измененное поле было обновлено, а остальные поля остались без изменений.\n
+        Ожидаемый результат - Объект успешно частично обновлен по ID, статус код 200 при обновлении, и измененное поле было обновлено, а остальные поля остались без изменений при получении объекта."""
+    )
+    def test_patch_item_by_id_success(self, item_client: ItemClient):
+        """Тест на успешное частичное обновление объекта по ID."""
+        logger.info("Тест на успешное частичное обновление объекта по ID начинается.")
+        payload = build_payload()
+        validate_create_item_response(payload)
+        item = item_client.create_item(payload)
+        response_json = item_client.get_item_by_id(item)
+        validate_get_item_response(response_json)
+        
+        assert response_json["title"] == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_json['title']}"
+        assert response_json["verified"] == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {response_json['verified']}"
+        assert response_json["important_numbers"] == payload["important_numbers"], f"Ожидались числа: {payload['important_numbers']}, но получены: {response_json['important_numbers']}"
+        assert response_json["addition"]["additional_info"] == payload["addition"]["additional_info"], f"Ожидалось добавление: {payload['addition']['additional_info']}, но получено: {response_json['addition']['additional_info']}"
+        assert response_json["addition"]["additional_number"] == payload["addition"]["additional_number"], f"Ожидалось добавление: {payload['addition']['additional_number']}, но получено: {response_json['addition']['additional_number']}"
+        assert response_json["id"] == response_json["addition"]["id"], f"Ожидалось совпадение ID: {response_json['id']} и ID в добавлении: {response_json['addition']['id']}, но получено: {response_json['addition']['id']}"
+        
+        new_payload = build_payload()
+        validate_create_item_response(new_payload)
+        patch_response = item_client.update_item(item, new_payload)
+        assert patch_response == 204, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
+        
+        get_response = item_client.get_item_by_id(item)
+        validate_get_item_response(get_response)
+        assert get_response["title"] == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {get_response['title']}"
+        assert get_response["verified"] == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {get_response['verified']}"
+        assert get_response["important_numbers"] == payload["important_numbers"], f"Ожидались числа: {payload['important_numbers']}, но получены: {get_response['important_numbers']}"
+        assert get_response["addition"]["additional_info"] == payload["addition"]["additional_info"], f"Ожидалось добавление: {payload['addition']['additional_info']}, но получено: {get_response['addition']['additional_info']}"
+        assert get_response["addition"]["additional_number"] == payload["addition"]["additional_number"], f"Ожидалось добавление: {payload['addition']['additional_number']}, но получено: {get_response['addition']['additional_number']}"
