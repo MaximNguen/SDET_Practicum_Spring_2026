@@ -45,10 +45,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose 
+          curl -v http://localhost:8080/ || echo "API не отвечает"
       - name: Start API service
         run: |
           cd api-service
           docker-compose up --build -d
+          docker ps
+          docker compose logs
           sleep 10
       - name: Run tests
         run: 
