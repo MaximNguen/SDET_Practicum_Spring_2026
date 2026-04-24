@@ -6,9 +6,17 @@
 <h3>Для UI Тестов</h3>
 <ul>
     <li>Язык - Python 3.10</li>
-    <li>Инструменты - Selenium, Pytest, Pytest-Xdist, Allure</li>
+    <li>Инструменты - Selenium, Pytest, Pytest-Xdist, Allure, logging</li>
     <li>Паттерны проектирования - Page Object Model, Page Factory</li>
 </ul>
+<h3>Для API Тестов</h3>
+<ul>
+    <li>Язык - Python 3.10</li>
+    <li>Инструменты - Requests, Pytest, Pytest-Xdist, Allure, Pydantic, logging, Docker, Docker-Compose</li>
+    <li>Паттерны проектирования - Client Wrapper Pattern - На юнит-тестах, Factory Endpoint - На E2E тесте</li>
+</ul>
+
+<h1>Задание 1 - Тестирование UI с заданным чек-листом для тестирования</h1>
 
 <h2>Объект тестирования и чек-лист</h2>
 <div>Объект - https://automationteststore.com/</div>
@@ -291,6 +299,8 @@
     </tr>
 </table>
 
+<h1>Задание 2 - Тестирование API сервиса из другой репозитории</h1>
+
 <h2>Установка и запуск</h2>
 <ol>
     <li>Клонировать репозиторий</li>
@@ -301,4 +311,5 @@
     <li>Если нужен отчет allure: <code>pytest --alluredir=allure-results</code></li>
     <li>Далее прописываете <code>allure serve allure-results</code></li>
     <li>Для параллельных тестов: <code>pytest -v -n auto</code></li>
+    <li>Если желаете запустить только UI тесты - <code>pytest tests/ui_testCases -v -n auto</code>, а если API - <code>pytest tests/api_testCases -n -v auto</code></li>
 </ol>
