@@ -41,59 +41,88 @@ jobs:
         with:
           repository: sun6r0/test-service
           path: api-service
-      - name: Install docker-compose
+      
+      - name: Create .env file for API service
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+          cd api-service
+          cat > .env << 'EOF'
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          POSTGRES_DB=postgres
+          POSTGRES_PORT=5432
+          HTTP_PORT=8080
+          EOF
+          echo "=== .env file created ==="
+          cat .env
+      
       - name: Start API service
         run: |
           cd api-service
-          docker-compose up --build -d postgres
-          sleep 10
-      - name: Create database schema manually
+          docker-compose down -v 2>/dev/null || true
+          docker-compose up --build -d
+          echo "Waiting for services to start..."
+          sleep 15
+          echo "=== Docker containers ==="
+          docker ps -a
+      
+      - name: Check migration status
         run: |
           cd api-service
-          docker-compose exec -T postgres psql -U postgres << 'EOF'
-          DROP TABLE IF EXISTS additions CASCADE;
-          DROP TABLE IF EXISTS entities CASCADE;
-          
-          CREATE TABLE entities (
-              id SERIAL PRIMARY KEY,
-              title TEXT NOT NULL,
-              verified BOOLEAN DEFAULT FALSE,
-              important_numbers JSONB,
-              addition JSONB
-          );
-          
-          CREATE TABLE additions (
-              id SERIAL PRIMARY KEY,
-              entity_id INTEGER REFERENCES entities(id) ON DELETE CASCADE,
-              additional_info TEXT,
-              additional_number INTEGER
-          );
-          
-          GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;
-          GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO postgres;
-          EOF
-          docker-compose up -d service
-          sleep 10
+          echo "=== Checking migration logs ==="
+          docker-compose logs migrate
+          echo ""
+          echo "=== Checking PostgreSQL ==="
+          docker-compose exec postgres pg_isready -U postgres
+          echo ""
+          echo "=== Checking database tables ==="
+          docker-compose exec postgres psql -U postgres -d postgres -c "\dt"
+      
       - name: Wait for API to be ready
         run: |
-          for i in {1..30}; do
-            if curl -fsS http://localhost:8080/api/getAll > /dev/null 2>&1; then
-              echo "API is up"
+          for i in {1..40}; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/getAll 2>/dev/null || echo "000")
+            echo "Attempt $i/40: HTTP $HTTP_CODE"
+            
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ API is ready!"
               exit 0
             fi
-            echo "Waiting for API... ($i/30)"
+            
+            # Если сервис отвечает, но с ошибкой - все равно продолжаем
+            if [ "$HTTP_CODE" = "500" ] || [ "$HTTP_CODE" = "404" ]; then
+              echo "⚠️ API responding with $HTTP_CODE, checking logs..."
+              cd api-service
+              docker-compose logs service --tail=10
+              cd ..
+            fi
+            
             sleep 2
           done
-          echo "API did not become ready in time"
+          
+          echo "❌ API did not become ready"
           cd api-service
-          docker-compose logs --no-color
+          echo "=== Full service logs ==="
+          docker-compose logs service
           exit 1
+      
+      - name: Debug API endpoints
+        run: |
+          echo "=== Testing API endpoints ==="
+          echo "GET /api/getAll:"
+          curl -s http://localhost:8080/api/getAll | head -c 500
+          echo ""
+          echo ""
+          echo "POST /api/create (test):"
+          curl -s -X POST http://localhost:8080/api/create \
+            -H "Content-Type: application/json" \
+            -d '{"title":"test","verified":true,"important_numbers":[1,2,3],"addition":{"additional_info":"test","additional_number":123}}' | head -c 500
+          echo ""
+      
       - name: Run API tests
         run: |
-          pytest tests/api_testCases -v -n auto --maxfail=5
+          # Запускаем без параллельного выполнения для диагностики
+          pytest tests/api_testCases -v --maxfail=3 -x
+      
       - name: Stop API service
         if: always()
         run: |
