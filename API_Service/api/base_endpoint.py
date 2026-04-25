@@ -40,15 +40,6 @@ class BaseEndpoint(ABC):
         assert (
             actual_code == expected_code
         ), f"Ожидали {expected_code}, получили {actual_code}. Ответ: {self.response.text}"
-        
-    @allure.step("Проверка наличия нужных полей в ответе")
-    def check_response_fields(self, expected_fields: list) -> None:
-        logger.info(f"Проверяем наличие полей в ответе: {expected_fields}")
-        assert self.response_json is not None, "Не получен JSON ответ"
-        for field in expected_fields:
-            assert (
-                field in self.response_json
-            ), f"Поле '{field}' не найден в ответе"
             
     @allure.step("Достаем Id у объекта из ответа")
     def extract_item_id(self) -> Optional[str]:

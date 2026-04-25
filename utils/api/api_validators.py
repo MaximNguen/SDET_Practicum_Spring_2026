@@ -71,7 +71,7 @@ def validate_get_all_items_response(response_json: Mapping[str, Any]) -> ItemsLi
             logger.error(f"Ошибка при валидации списка объектов: {e}")
             raise ValueError(f"Ошибка при валидации списка объектов: {e}")
         
-def validate_get_item_response(response_json: Mapping[str, Any]) -> ResponseCreatedSchema:
+def validate_id_item_response(response_json: Mapping[str, Any]) -> ResponseCreatedSchema:
     """Проверяет, что ответ при создании товара соответствует схеме ResponseCreatedSchema."""
     with allure.step("Проверяем, что ответ при получении товара соответствует схеме ResponseCreatedSchema"):   
         logger.info(f"Проверяем ответ при получении товара: {response_json}, используя схему ResponseCreatedSchema")

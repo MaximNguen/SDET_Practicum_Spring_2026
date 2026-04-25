@@ -5,7 +5,7 @@ import allure
 from API_Service.clients.base_client import BaseClient
 from config import CREATE_URL, DELETE_URL, GET_ALL_URL, GET_BY_ID_URL, PATCH_URL
 from API_Service.schemas.ItemSchema import ItemResponseSchema, ItemsListResponseSchema
-from utils.api.api_validators import validate_get_all_items_response, validate_get_item_response
+from utils.api.api_validators import validate_get_all_items_response, validate_get_item_response, validate_id_item_response
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class ItemClient(BaseClient):
         """Создание нового товара."""
         logger.info(f"Создаем новый товар с данными: {item_data}")
         response = self.send_request("POST", CREATE_URL, json=item_data)
-        return validate_get_item_response(response.json())
+        return validate_id_item_response(response.json())
 
     @allure.step("Удаляем товар с ID: {item_id}")
     def delete_item(self, item_id: int) -> int:
