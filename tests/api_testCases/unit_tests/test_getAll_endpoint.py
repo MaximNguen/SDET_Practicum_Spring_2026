@@ -2,7 +2,7 @@ import allure
 import logging
 
 from clients.item_client import ItemClient
-from utils.api.api_validators import validate_get_item_response, validate_create_item_response
+from utils.api.api_validators import validate_create_item_response
 from utils.api.payloads import build_payload
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,6 @@ class TestGetAllItemsEndpoint:
             validate_create_item_response(builed_payload)
             item = item_client.create_item(builed_payload)
             get_item_response = item_client.get_item_by_id(item)
-            validate_get_item_response(get_item_response)
             logger.info(f"Новый объект успешно создан - {get_item_response} и получен по ID, добавляем его в список для проверки общего количества объектов.")
             items.append(get_item_response)
             
@@ -43,5 +42,4 @@ class TestGetAllItemsEndpoint:
             assert status == 200, f"Ожидался статус код 200 при создании объекта, но получен: {status}"
         
         response_json = item_client.get_all_items()
-        assert isinstance(response_json, dict), f"Ожидался список, но получен: {type(response_json)}"
-        assert len(response_json_before["entity"]) + 3 == len(response_json["entity"]), f"Ожидалось количество объектов: {len(response_json_before['entity']) + 3}, но получено: {len(response_json['entity'])}"
+        assert len(response_json_before.entity) + 3 == len(response_json.entity), f"Ожидалось количество объектов: {len(response_json_before.entity) + 3}, но получено: {len(response_json.entity)}"

@@ -4,6 +4,8 @@ import allure
 
 from clients.base_client import BaseClient
 from config import CREATE_URL, DELETE_URL, GET_ALL_URL, GET_BY_ID_URL, PATCH_URL
+from schemas.ItemSchema import ItemResponseSchema, ItemsListResponseSchema
+from utils.api.api_validators import validate_get_all_items_response, validate_get_item_response
 
 logger = logging.getLogger(__name__)
 
@@ -25,18 +27,18 @@ class ItemClient(BaseClient):
         return response.status_code
 
     @allure.step("Получаем список всех товаров")
-    def get_all_items(self) -> Dict[str, Any]:
+    def get_all_items(self) -> ItemsListResponseSchema:
         """Получение списка всех товаров."""
         logger.info("Получаем список всех товаров.")
         response = self.send_request("GET", GET_ALL_URL)
-        return response.json()
+        return validate_get_all_items_response(response.json())
 
     @allure.step("Получаем информацию о товаре с ID: {item_id}")
-    def get_item_by_id(self, item_id: int) -> Dict[str, Any]:
+    def get_item_by_id(self, item_id: int) -> ItemResponseSchema:
         """Получение товара по ID."""
         logger.info(f"Получаем информацию о товаре с ID: {item_id}")
         response = self.send_request("GET", f"{GET_BY_ID_URL}{item_id}")
-        return response.json()
+        return validate_get_item_response(response.json())
     
     @allure.step("Получаем информацию о товаре с ID: {item_id}")
     def get_item_by_id_after_delete(self, item_id: int) -> Dict[str, Any]:

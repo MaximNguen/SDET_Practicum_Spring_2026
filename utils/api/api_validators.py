@@ -53,14 +53,14 @@ def validate_get_item_response(response_json: Mapping[str, Any]) -> ItemResponse
             logger.error(f"Ошибка валидации ответа при получении товара: {e}")
             raise ValueError(f"Ответ не соответствует схеме ItemResponseSchema: {e}")
 
-def validate_get_all_items_response(response_json: Mapping[str, Any]) -> list[ItemResponseSchema]:
-    """Проверяет, что ответ при получении всех товаров соответствует схеме ItemResponseSchema."""
+def validate_get_all_items_response(response_json: Mapping[str, Any]) -> ItemsListResponseSchema:
+    """Проверяет, что ответ при получении всех товаров соответствует схеме ItemsListResponseSchema."""
     with allure.step("Проверяем, что ответ при получении всех товаров соответствует схеме ItemResponseSchema"):
         logger.info(f"Проверяем ответ при получении всех товаров: {response_json}, используя схему ItemResponseSchema")
         try:
             validated_response = deserialize_get_all_items_response(response_json)
             logger.info(f"Успешно валидировано {len(validated_response.entity)} объектов")
-            return validated_response.entity
+            return validated_response
         except ValidationError as e:
             logger.error(f"Ошибка валидации ответа при получении всех товаров: {e}")
             raise ValueError(f"Ответ не соответствует схеме ItemsListResponseSchema: {e}")

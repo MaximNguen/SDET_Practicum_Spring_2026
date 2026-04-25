@@ -3,7 +3,7 @@ import logging
 
 from clients.item_client import ItemClient
 from utils.api.payloads import build_payload
-from utils.api.api_validators import validate_get_item_response, validate_create_item_response
+from utils.api.api_validators import validate_create_item_response
 
 logger = logging.getLogger(__name__)
 
@@ -31,15 +31,14 @@ class TestPatchItemEndpoint:
         payload = build_payload()
         validate_create_item_response(payload)
         item = item_client.create_item(payload)
-        response_json = item_client.get_item_by_id(item)
-        validate_get_item_response(response_json)
+        response_model = item_client.get_item_by_id(item)
         
-        assert response_json["title"] == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_json['title']}"
-        assert response_json["verified"] == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {response_json['verified']}"
-        assert response_json["important_numbers"] == payload["important_numbers"], f"Ожидались числа: {payload['important_numbers']}, но получены: {response_json['important_numbers']}"
-        assert response_json["addition"]["additional_info"] == payload["addition"]["additional_info"], f"Ожидалось добавление: {payload['addition']['additional_info']}, но получено: {response_json['addition']['additional_info']}"
-        assert response_json["addition"]["additional_number"] == payload["addition"]["additional_number"], f"Ожидалось добавление: {payload['addition']['additional_number']}, но получено: {response_json['addition']['additional_number']}"
-        assert response_json["id"] == response_json["addition"]["id"], f"Ожидалось совпадение ID: {response_json['id']} и ID в добавлении: {response_json['addition']['id']}, но получено: {response_json['addition']['id']}"
+        assert response_model.title == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_model.title}"
+        assert response_model.verified == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {response_model.verified}"
+        assert response_model.important_numbers == payload["important_numbers"], f"Ожидались числа: {payload['important_numbers']}, но получены: {response_model.important_numbers}"
+        assert response_model.addition.additional_info == payload["addition"]["additional_info"], f"Ожидалось добавление: {payload['addition']['additional_info']}, но получено: {response_model.addition.additional_info}"
+        assert response_model.addition.additional_number == payload["addition"]["additional_number"], f"Ожидалось добавление: {payload['addition']['additional_number']}, но получено: {response_model.addition.additional_number}"
+        assert response_model.id == response_model.addition.id, f"Ожидалось совпадение ID: {response_model.id} и ID в добавлении: {response_model.addition.id}, но получено: {response_model.addition.id}"
         
         new_payload = build_payload()
         validate_create_item_response(new_payload)
@@ -47,9 +46,8 @@ class TestPatchItemEndpoint:
         assert patch_response == 204, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
         
         get_response = item_client.get_item_by_id(item)
-        validate_get_item_response(get_response)
-        assert get_response["title"] == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {get_response['title']}"
-        assert get_response["verified"] == new_payload["verified"], f"Ожидался статус: {new_payload['verified']}, но получен: {get_response['verified']}"
-        assert get_response["important_numbers"] == new_payload["important_numbers"], f"Ожидались числа: {new_payload['important_numbers']}, но получены: {get_response['important_numbers']}"
-        assert get_response["addition"]["additional_info"] == new_payload["addition"]["additional_info"], f"Ожидалось добавление: {new_payload['addition']['additional_info']}, но получено: {get_response['addition']['additional_info']}"
-        assert get_response["addition"]["additional_number"] == new_payload["addition"]["additional_number"], f"Ожидалось добавление: {new_payload['addition']['additional_number']}, но получено: {get_response['addition']['additional_number']}"
+        assert get_response.title == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {get_response.title}"
+        assert get_response.verified == new_payload["verified"], f"Ожидался статус: {new_payload['verified']}, но получен: {get_response.verified}"
+        assert get_response.important_numbers == new_payload["important_numbers"], f"Ожидались числа: {new_payload['important_numbers']}, но получены: {get_response.important_numbers}"
+        assert get_response.addition.additional_info == new_payload["addition"]["additional_info"], f"Ожидалось добавление: {new_payload['addition']['additional_info']}, но получено: {get_response.addition.additional_info}"
+        assert get_response.addition.additional_number == new_payload["addition"]["additional_number"], f"Ожидалось добавление: {new_payload['addition']['additional_number']}, но получено: {get_response.addition.additional_number}"

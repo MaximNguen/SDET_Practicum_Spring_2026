@@ -3,6 +3,7 @@ import allure
 import logging
 
 from api.base_endpoint import BaseEndpoint
+from schemas.ItemSchema import ItemsListResponseSchema
 from utils.api.api_validators import validate_get_all_items_response
 
 logger = logging.getLogger(__name__)
@@ -11,7 +12,7 @@ class GetAllItemsEndpoint(BaseEndpoint):
     """Эндпоинт для получения всех товаров."""
 
     @allure.step("Получаем список всех товаров")
-    def action(self) -> list[Dict[str, Any]]:
+    def action(self) -> ItemsListResponseSchema:
         logger.info("Получаем список всех товаров")
         self.response = self.session.get(self.get_all_url)
         self.response_json = self.response.json()
