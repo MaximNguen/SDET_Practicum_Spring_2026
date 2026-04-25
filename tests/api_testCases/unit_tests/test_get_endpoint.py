@@ -23,13 +23,14 @@ class TestGetItemEndpoint:
               отправлены при создании объекта.\n
         Ожидаемый результат - Объект успешно получен по ID, статус код 200, и данные объекта в ответе соответствуют данным при создании."""
     )
-    def test_get_item_by_id_success(self, item_client: ItemClient):
+    def test_get_item_by_id_success(self, item_client: ItemClient, item_clean_all):
         """Тест на успешное получение объекта по ID."""
         logger.info("Тест на успешное получение объекта по ID начинается.")
         payload = build_payload()
         item = item_client.create_item(payload)
         response_model = item_client.get_item_by_id(item)
         status = item_client.get_status_code(item)
+        item_clean_all(item)
         
         assert status == 200, f"Ожидался статус код 200, но получен: {status}"
         assert response_model.title == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_model.title}"

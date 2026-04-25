@@ -23,7 +23,7 @@ class TestGetAllItemsEndpoint:
         4. Проверить, что ответ содержит список объектов и что каждый объект соответствует ожидаемой структуре данных.\n
         Ожидаемый результат - Список всех объектов успешно получен, статус код 200, и каждый объект соответствует ожидаемой структуре данных."""
     )
-    def test_get_all_items_success(self, item_client: ItemClient):
+    def test_get_all_items_success(self, item_client: ItemClient, item_clean_all):
         """Тест на успешное получение списка всех объектов."""
         logger.info("Тест на успешное получение списка всех объектов начинается.")
         items = []
@@ -33,6 +33,7 @@ class TestGetAllItemsEndpoint:
             builed_payload = build_payload()
             validate_create_item_response(builed_payload)
             item = item_client.create_item(builed_payload)
+            item_clean_all(item)
             get_item_response = item_client.get_item_by_id(item)
             logger.info(f"Новый объект успешно создан - {get_item_response} и получен по ID, добавляем его в список для проверки общего количества объектов.")
             items.append(get_item_response)

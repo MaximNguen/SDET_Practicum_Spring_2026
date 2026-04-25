@@ -25,7 +25,7 @@ class TestItemLifecycle:
         6. Отправить запрос на получение объекта по тому же ID и убедиться, что он больше не существует (статус код 500 или соответствующее сообщение об ошибке).\n
         Ожидаемый результат - Объект успешно проходит полный жизненный цикл: создается, данные при получении соответствуют данным при создании, успешно обновляется, а затем удаляется и больше не существует при попытке его получения."""
     )
-    def test_item_lifecycle(self, endpoint_factory: FactoryEndpoint):
+    def test_item_lifecycle(self, endpoint_factory: FactoryEndpoint, item_clean_all):
         """Тест на проверку полного жизненного цикла объекта."""
         logger.info("Тест на проверку полного жизненного цикла объекта начинается.")
 
@@ -51,7 +51,7 @@ class TestItemLifecycle:
         new_payload = build_payload()
         validate_create_item_response(new_payload)
         patch_response = patch_endpoint.action(item_id, new_payload)
-        assert patch_response == 204, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
+        assert patch_response is True, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
         
         response_model_updated = get_endpoint.action(item_id)
         assert response_model_updated.title == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {response_model_updated.title}"
@@ -62,9 +62,9 @@ class TestItemLifecycle:
         assert response_model_updated.id == response_model_updated.addition.id, f"Ожидалось совпадение ID: {response_model_updated.id} и ID в добавлении: {response_model_updated.addition.id}, но получено: {response_model_updated.addition.id}"
         
         delete_response = delete_endpoint.action(item_id)
-        assert delete_response == 204, f"Ожидался статус код 204 при удалении объекта, но получен: {delete_response}"
+        assert delete_response is True, f"Ожидался статус код 204 при удалении объекта, но получен: {delete_response}"
         
         get_response_after_delete = get_endpoint.action_expect_error(item_id, expected_code=500)
-        assert get_response_after_delete == 500, (
+        assert get_response_after_delete is True, (
             f"Ожидался статус код 500 при запросе после удаления, но получен: {get_response_after_delete}"
         )

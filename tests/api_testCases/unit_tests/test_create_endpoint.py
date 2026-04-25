@@ -23,13 +23,14 @@ class TestCreateItemEndpoint:
         4. Проверить, что данные в ответе соответствуют данным, которые были отправлены при создании объекта, и что в ответе присутствует уникальный идентификатор (ID) для нового объекта.\n
         Ожидаемый результат - Новый объект успешно создан, статус код 200, и данные в ответе соответствуют данным при создании объекта, включая наличие уникального идентификатора (ID)."""
     )
-    def test_create_item_success(self, item_client: ItemClient):
+    def test_create_item_success(self, item_client: ItemClient, item_clean_all):
         logger.info("Тест на успешное создание нового объекта начинается.")
         payload = build_payload()
         validate_create_item_response(payload)
         item = item_client.create_item(payload)
         logger.info(f"Новый объект успешно создан - {item} и получен по ID.")
         response_model = item_client.get_item_by_id(item)
+        item_clean_all(item)
         status = item_client.get_status_code(item)
         logger.info(f"Проверяем статус код ответа при получении объекта по ID - {status}.")
         

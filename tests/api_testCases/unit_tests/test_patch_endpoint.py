@@ -24,12 +24,13 @@ class TestPatchItemEndpoint:
         5. Отправить запрос на получение объекта по тому же ID и убедиться, что измененное поле было обновлено, а остальные поля остались без изменений.\n
         Ожидаемый результат - Объект успешно частично обновлен по ID, статус код 200 при обновлении, и измененное поле было обновлено, а остальные поля остались без изменений при получении объекта."""
     )
-    def test_patch_item_by_id_success(self, item_client: ItemClient):
+    def test_patch_item_by_id_success(self, item_client: ItemClient, item_clean_all):
         """Тест на успешное частичное обновление объекта по ID."""
         logger.info("Тест на успешное частичное обновление объекта по ID начинается.")
         payload = build_payload()
         validate_create_item_response(payload)
         item = item_client.create_item(payload)
+        item_clean_all(item)
         response_model = item_client.get_item_by_id(item)
         
         assert response_model.title == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_model.title}"
@@ -42,7 +43,7 @@ class TestPatchItemEndpoint:
         new_payload = build_payload()
         validate_create_item_response(new_payload)
         patch_response = item_client.update_item(item, new_payload)
-        assert patch_response == 204, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
+        assert patch_response is True, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
         
         get_response = item_client.get_item_by_id(item)
         assert get_response.title == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {get_response.title}"

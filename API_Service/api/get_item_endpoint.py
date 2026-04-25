@@ -24,4 +24,4 @@ class GetItemEndpoint(BaseEndpoint):
         logger.info(f"Получаем информацию о товаре с ID: {item_id}, ожидая ошибку с кодом {expected_code}")
         self.response = self.session.get(f"{self.get_by_id_url}{item_id}")
         self.check_status_code(expected_code)
-        return self.response.status_code
+        return True
