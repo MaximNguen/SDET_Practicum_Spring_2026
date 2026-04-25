@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from API_Service.schemas.ItemSchema import ItemResponseSchema, ItemRequestSchema, ItemsListResponseSchema
+from API_Service.schemas.ItemSchema import ItemResponseSchema, ItemRequestSchema, ItemsListResponseSchema, ResponseCreatedSchema
 
 
 def deserialize_create_item_payload(payload: Mapping[str, Any]) -> ItemRequestSchema:
@@ -17,6 +17,9 @@ def deserialize_get_item_response(response_json: Mapping[str, Any]) -> ItemRespo
     """Десериализует ответ API в модель ItemResponseSchema."""
     return ItemResponseSchema.from_dict(response_json)
 
+def deserialize_response_created(response_json: Mapping[str, Any]) -> ResponseCreatedSchema:
+    """Десериализует ответ API при успешном создании объекта в модель ResponseCreatedSchema."""
+    return ResponseCreatedSchema.from_dict(response_json)
 
 def deserialize_get_all_items_response(response_json: Mapping[str, Any]) -> ItemsListResponseSchema:
     """Десериализует ответ API со списком объектов в модель ItemsListResponseSchema."""
@@ -67,3 +70,13 @@ def validate_get_all_items_response(response_json: Mapping[str, Any]) -> ItemsLi
         except Exception as e:
             logger.error(f"Ошибка при валидации списка объектов: {e}")
             raise ValueError(f"Ошибка при валидации списка объектов: {e}")
+        
+def validate_get_item_response(response_json: Mapping[str, Any]) -> ResponseCreatedSchema:
+    """Проверяет, что ответ при создании товара соответствует схеме ResponseCreatedSchema."""
+    with allure.step("Проверяем, что ответ при получении товара соответствует схеме ResponseCreatedSchema"):   
+        logger.info(f"Проверяем ответ при получении товара: {response_json}, используя схему ResponseCreatedSchema")
+        try:
+            return deserialize_response_created(response_json)
+        except Exception as e:
+            logger.error(f"Ошибка валидации ответа при получении товара: {e}")
+            raise ValueError(f"Ответ не соответствует схеме ResponseCreatedSchema: {e}")

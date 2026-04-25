@@ -27,6 +27,11 @@ class SchemaModelMixin(BaseModel):
     def to_json(self) -> str:
         return self.model_dump_json()
 
+class ResponseCreatedSchema(SchemaModelMixin):
+    """Схема для ответа при успешном создании объекта."""
+    model_config = ConfigDict(extra="allow", strict=True, populate_by_name=True)
+    
+    id: int = Field(..., description="Уникальный идентификатор созданного объекта", ge=0)
 
 class AdditionResponseSchema(SchemaModelMixin):
     """Схема для поля addition в ответе."""

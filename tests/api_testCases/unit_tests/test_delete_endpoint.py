@@ -16,7 +16,6 @@ class TestDeleteItemEndpoint:
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.description(
         """Проверка успешного удаления объекта по ID.\n
-        Предусловие - Создать новый объект через API и получить его ID.\n
         Шаги:\n
         1. Создать новый объект через API и получить его ID.\n
         2. Отправить запрос на удаление объекта по ID.\n

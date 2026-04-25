@@ -17,7 +17,7 @@ class ItemClient(BaseClient):
         """Создание нового товара."""
         logger.info(f"Создаем новый товар с данными: {item_data}")
         response = self.send_request("POST", CREATE_URL, json=item_data)
-        return response.json()
+        return validate_get_item_response(response.json())
 
     @allure.step("Удаляем товар с ID: {item_id}")
     def delete_item(self, item_id: int) -> int:
