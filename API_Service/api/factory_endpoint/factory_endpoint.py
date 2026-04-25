@@ -2,12 +2,12 @@ from typing import Dict, Literal, Optional, overload
 import allure
 import logging
 
-from api.base_endpoint import BaseEndpoint
-from api.create_item_endpoint import CreateItemEndpoint
-from api.delete_item_endpoint import DeleteItemEndpoint
-from api.get_item_endpoint import GetItemEndpoint
-from api.get_items_endpoint import GetAllItemsEndpoint
-from api.update_item_endpoint import UpdateItemEndpoint
+from API_Service.api.base_endpoint import BaseEndpoint
+from API_Service.api.create_item_endpoint import CreateItemEndpoint
+from API_Service.api.delete_item_endpoint import DeleteItemEndpoint
+from API_Service.api.get_item_endpoint import GetItemEndpoint
+from API_Service.api.get_items_endpoint import GetAllItemsEndpoint
+from API_Service.api.update_item_endpoint import UpdateItemEndpoint
 
 logger = logging.getLogger(__name__)
 

@@ -3,10 +3,10 @@ import pytest
 import allure
 from selenium.webdriver.chrome.options import Options
 
-from api.factory_endpoint.factory_endpoint import FactoryEndpoint
+from API_Service.api.factory_endpoint.factory_endpoint import FactoryEndpoint
 from utils.api.api_validators import extract_item_id_from_create_response
-from clients.item_client import ItemClient
-from pages.factory_pages.page_factory import PageFactory
+from API_Service.clients.item_client import ItemClient
+from UI_Service.pages.factory_pages.page_factory import PageFactory
 from utils.api.payloads import build_payload
 
 # ============================ Фикстуры для тестов UI ============================

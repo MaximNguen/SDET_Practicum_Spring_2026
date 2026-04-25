@@ -2,9 +2,9 @@ from typing import Any, Dict
 import logging
 import allure
 
-from clients.base_client import BaseClient
+from API_Service.clients.base_client import BaseClient
 from config import CREATE_URL, DELETE_URL, GET_ALL_URL, GET_BY_ID_URL, PATCH_URL
-from schemas.ItemSchema import ItemResponseSchema, ItemsListResponseSchema
+from API_Service.schemas.ItemSchema import ItemResponseSchema, ItemsListResponseSchema
 from utils.api.api_validators import validate_get_all_items_response, validate_get_item_response
 
 logger = logging.getLogger(__name__)

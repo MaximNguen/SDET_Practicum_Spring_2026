@@ -5,7 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 import allure
 from typing import List
 
-from pages.base_page import BasePage
+from UI_Service.pages.base_page import BasePage
 from data.ui_data.locators_items import ItemPageLocators as IPL
 
 logger = logging.getLogger(__name__)

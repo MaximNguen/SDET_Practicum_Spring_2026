@@ -5,7 +5,7 @@ from selenium.common.exceptions import TimeoutException
 import logging
 
 from data.ui_data.locators_cart import CartPageLocators as CPL
-from pages.base_page import BasePage
+from UI_Service.pages.base_page import BasePage
 from utils.ui.stringUtils import StringUtils as SU
 
 logger = logging.getLogger(__name__)

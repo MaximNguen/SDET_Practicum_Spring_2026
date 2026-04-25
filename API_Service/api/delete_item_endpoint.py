@@ -1,7 +1,7 @@
 import allure
 import logging
 
-from api.base_endpoint import BaseEndpoint
+from API_Service.api.base_endpoint import BaseEndpoint
 
 logger = logging.getLogger(__name__)
 

@@ -2,8 +2,8 @@ from typing import Any, Dict
 import allure
 import logging
 
-from api.base_endpoint import BaseEndpoint
-from schemas.ItemSchema import ItemsListResponseSchema
+from API_Service.api.base_endpoint import BaseEndpoint
+from API_Service.schemas.ItemSchema import ItemsListResponseSchema
 from utils.api.api_validators import validate_get_all_items_response
 
 logger = logging.getLogger(__name__)

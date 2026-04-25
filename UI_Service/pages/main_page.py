@@ -5,7 +5,7 @@ import allure
 from typing import List
 import random
 
-from pages.base_page import BasePage
+from UI_Service.pages.base_page import BasePage
 from data.ui_data.locators_main import MainPageLocators as MPL
 from data.ui_data.locators_items import ItemPageLocators as IPL
 from data.ui_data.locators_product import ProductPageLocators as PPL

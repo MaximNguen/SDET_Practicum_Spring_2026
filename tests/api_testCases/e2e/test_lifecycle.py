@@ -1,7 +1,7 @@
 import allure
 import logging
 
-from api.factory_endpoint.factory_endpoint import FactoryEndpoint
+from API_Service.api.factory_endpoint.factory_endpoint import FactoryEndpoint
 from utils.api.api_validators import validate_create_item_response
 from utils.api.payloads import build_payload
 

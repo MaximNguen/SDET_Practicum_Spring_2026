@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from schemas.ItemSchema import ItemResponseSchema, ItemRequestSchema, ItemsListResponseSchema
+from API_Service.schemas.ItemSchema import ItemResponseSchema, ItemRequestSchema, ItemsListResponseSchema
 
 
 def deserialize_create_item_payload(payload: Mapping[str, Any]) -> ItemRequestSchema:

@@ -1,7 +1,7 @@
 import allure
 import logging
 
-from clients.item_client import ItemClient
+from API_Service.clients.item_client import ItemClient
 from utils.api.payloads import build_payload
 
 logger = logging.getLogger(__name__)
