@@ -117,12 +117,23 @@ jobs:
             exit 1
           fi
 
+          echo "=== docker compose ps ==="
+          docker compose ps --all
+
+          echo "=== Service inspect (state + exit) ==="
+          docker inspect "$SERVICE_CONTAINER_ID" \
+            --format 'Status={{.State.Status}} ExitCode={{.State.ExitCode}} Error={{.State.Error}} OOMKilled={{.State.OOMKilled}} StartedAt={{.State.StartedAt}} FinishedAt={{.State.FinishedAt}}'
+
           SERVICE_STATE=$(docker inspect -f '{{.State.Status}}' "$SERVICE_CONTAINER_ID")
           echo "Service state: $SERVICE_STATE"
 
           if [ "$SERVICE_STATE" != "running" ]; then
-            echo "Service is not running, dumping logs"
-            docker logs "$SERVICE_CONTAINER_ID" || true
+            echo "Service is not running. Last 300 lines of logs:"
+            docker logs --tail 300 "$SERVICE_CONTAINER_ID" || true
+
+            echo "=== Full compose logs (service + postgres + migrate) ==="
+            docker compose logs --no-color --tail=300 service postgres migrate || true
+
             exit 1
           fi
       
