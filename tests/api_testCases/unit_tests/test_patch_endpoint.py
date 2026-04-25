@@ -32,7 +32,7 @@ class TestPatchItemEndpoint:
         validate_create_item_response(payload)
         item = item_client.create_item(payload)
         item_clean_all(item)
-        response_model = item_client.get_item_by_id(item)
+        response_model = item_client.get_item_by_id(item.id)
         
         assert response_model.title == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_model.title}"
         assert response_model.verified == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {response_model.verified}"
@@ -43,10 +43,10 @@ class TestPatchItemEndpoint:
         
         new_payload = build_payload()
         validate_create_item_response(new_payload)
-        patch_response = item_client.update_item(item, new_payload)
+        patch_response = item_client.update_item(item.id, new_payload)
         assert patch_response is True, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
         
-        get_response = item_client.get_item_by_id(item)
+        get_response = item_client.get_item_by_id(item.id)
         assert get_response.title == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {get_response.title}"
         assert get_response.verified == new_payload["verified"], f"Ожидался статус: {new_payload['verified']}, но получен: {get_response.verified}"
         assert get_response.important_numbers == new_payload["important_numbers"], f"Ожидались числа: {new_payload['important_numbers']}, но получены: {get_response.important_numbers}"

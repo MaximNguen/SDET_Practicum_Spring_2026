@@ -29,10 +29,10 @@ class TestGetItemEndpoint:
         logger.info("Тест на успешное получение объекта по ID начинается.")
         payload = build_payload()
         item = item_client.create_item(payload)
-        response_model = item_client.get_item_by_id(item)
-        status = item_client.get_status_code(item)
-        item_clean_all(item)
-        
+        response_model = item_client.get_item_by_id(item.id)
+        status = item_client.get_status_code(item.id)
+        item_clean_all(item.id)
+
         assert status == 200, f"Ожидался статус код 200, но получен: {status}"
         assert response_model.title == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_model.title}"
         assert response_model.verified == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {response_model.verified}"

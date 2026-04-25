@@ -34,12 +34,12 @@ class TestGetAllItemsEndpoint:
             builed_payload = build_payload()
             validate_create_item_response(builed_payload)
             item = item_client.create_item(builed_payload)
-            item_clean_all(item)
-            get_item_response = item_client.get_item_by_id(item)
+            item_clean_all(item.id)
+            get_item_response = item_client.get_item_by_id(item.id)
             logger.info(f"Новый объект успешно создан - {get_item_response} и получен по ID, добавляем его в список для проверки общего количества объектов.")
             items.append(get_item_response)
             
-            status = item_client.get_status_code(item)
+            status = item_client.get_status_code(item.id)
             assert status == 200, f"Ожидался статус код 200 при создании объекта, но получен: {status}"
         
         response_json = item_client.get_all_items()

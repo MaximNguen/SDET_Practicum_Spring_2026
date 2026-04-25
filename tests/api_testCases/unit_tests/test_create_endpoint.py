@@ -30,9 +30,9 @@ class TestCreateItemEndpoint:
         validate_create_item_response(payload)
         item = item_client.create_item(payload)
         logger.info(f"Новый объект успешно создан - {item} и получен по ID.")
-        response_model = item_client.get_item_by_id(item)
-        item_clean_all(item)
-        status = item_client.get_status_code(item)
+        response_model = item_client.get_item_by_id(item.id)
+        item_clean_all(item.id)
+        status = item_client.get_status_code(item.id)
         logger.info(f"Проверяем статус код ответа при получении объекта по ID - {status}.")
         
         assert status == 200, f"Ожидался статус код 200, но получен: {status}"

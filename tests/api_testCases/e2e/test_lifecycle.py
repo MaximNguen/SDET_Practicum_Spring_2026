@@ -37,11 +37,11 @@ class TestItemLifecycle:
 
         payload = build_payload()
         validate_create_item_response(payload)
-        item_id = create_endpoint.action(payload)
-        item_clean_all(item_id)
-        logger.info("Новый объект успешно создан и получен по ID: %s", item_id)
+        item = create_endpoint.action(payload)
+        item_clean_all(item.id)
+        logger.info("Новый объект успешно создан и получен по ID: %s", item.id)
         
-        response_model = get_endpoint.action(item_id)
+        response_model = get_endpoint.action(item.id)
         
         assert response_model.title == payload["title"], f"Ожидалось имя: {payload['title']}, но получено: {response_model.title}"
         assert response_model.verified == payload["verified"], f"Ожидался статус: {payload['verified']}, но получен: {response_model.verified}"
@@ -52,10 +52,10 @@ class TestItemLifecycle:
         
         new_payload = build_payload()
         validate_create_item_response(new_payload)
-        patch_response = patch_endpoint.action(item_id, new_payload)
+        patch_response = patch_endpoint.action(item.id, new_payload)
         assert patch_response is True, f"Ожидался статус код 204 при частичном обновлении объекта, но получен: {patch_response}"
         
-        response_model_updated = get_endpoint.action(item_id)
+        response_model_updated = get_endpoint.action(item.id)
         assert response_model_updated.title == new_payload["title"], f"Ожидалось имя: {new_payload['title']}, но получено: {response_model_updated.title}"
         assert response_model_updated.verified == new_payload["verified"], f"Ожидался статус: {new_payload['verified']}, но получен: {response_model_updated.verified}"
         assert response_model_updated.important_numbers == new_payload["important_numbers"], f"Ожидались числа: {new_payload['important_numbers']}, но получены: {response_model_updated.important_numbers}"
@@ -63,10 +63,10 @@ class TestItemLifecycle:
         assert response_model_updated.addition.additional_number == new_payload["addition"]["additional_number"], f"Ожидалось добавление: {new_payload['addition']['additional_number']}, но получено: {response_model_updated.addition.additional_number}"
         assert response_model_updated.id == response_model_updated.addition.id, f"Ожидалось совпадение ID: {response_model_updated.id} и ID в добавлении: {response_model_updated.addition.id}, но получено: {response_model_updated.addition.id}"
         
-        delete_response = delete_endpoint.action(item_id)
+        delete_response = delete_endpoint.action(item.id)
         assert delete_response is True, f"Ожидался статус код 204 при удалении объекта, но получен: {delete_response}"
         
-        get_response_after_delete = get_endpoint.action_expect_error(item_id, expected_code=500)
+        get_response_after_delete = get_endpoint.action_expect_error(item.id, expected_code=500)
         assert get_response_after_delete is True, (
             f"Ожидался статус код 500 при запросе после удаления, но получен: {get_response_after_delete}"
         )

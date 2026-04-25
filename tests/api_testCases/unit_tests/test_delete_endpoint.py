@@ -30,8 +30,8 @@ class TestDeleteItemEndpoint:
         payload = build_payload()
         validate_create_item_response(payload)
         item = item_client.create_item(payload)
-        item_clean_all(item)
-        delete_response = item_client.delete_item(item)
+        item_clean_all(item.id)
+        delete_response = item_client.delete_item(item.id)
         
         assert delete_response is True, f"Ожидался статус код 204 при удалении объекта, но получен: {delete_response}"
         
