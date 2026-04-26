@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 import requests
 import logging
 import allure
-import data.api_data.http_method_enum import HTTPMethod
+from data.api_data.http_method_enum import HTTPMethod
 
 from config import BASE_URL, TIMEOUT_SECONDS, HEADERS
 
