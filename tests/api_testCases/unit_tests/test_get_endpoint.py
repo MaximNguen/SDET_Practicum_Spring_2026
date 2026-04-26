@@ -11,6 +11,14 @@ logger = logging.getLogger(__name__)
 class TestGetItemEndpoint:
     """Тесты для эндпоинта получения объекта по ID."""
     
+    def get_non_exist_id(self, item_client: ItemClient) -> int:
+        """Создание не существующего ID для тестирования получения объекта по несуществующему ID."""
+        logger.info("Получаем все ID существующих объектов для создания несуществующего ID. То есть просто +1 к максимальному ID.")
+        objects = item_client.get_all_items()
+        existing_ids = [obj.id for obj in objects]
+        non_existent_id = max(existing_ids) + 1 if existing_ids else 1
+        return non_existent_id
+    
     @allure.title("Успешное получение объекта по ID")
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.description(
@@ -54,7 +62,7 @@ class TestGetItemEndpoint:
     def test_get_item_by_id_not_found(self, item_client: ItemClient):
         """Тест на получение объекта по несуществующему ID."""
         logger.info("Тест на получение объекта по несуществующему ID начинается.")
-        non_existent_id = 999999
+        non_existent_id = self.get_non_exist_id(item_client)
         status = item_client.get_status_code(non_existent_id)
         
         assert status == 500, f"Ожидался статус код 500, но получен: {status}"
