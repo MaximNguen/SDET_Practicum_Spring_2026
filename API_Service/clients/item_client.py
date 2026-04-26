@@ -3,6 +3,7 @@ import logging
 import allure
 
 from API_Service.clients.base_client import BaseClient
+from data.api_data.http_method_enum import HTTPMethod
 from config import CREATE_URL, DELETE_URL, GET_ALL_URL, GET_BY_ID_URL, PATCH_URL
 from API_Service.schemas.ItemSchema import ItemResponseSchema, ItemsListResponseSchema, ResponseCreatedSchema
 from utils.api.api_validators import validate_get_all_items_response, validate_get_item_response, validate_id_item_response
@@ -16,47 +17,47 @@ class ItemClient(BaseClient):
     def create_item(self, item_data: Dict[str, Any]) -> ResponseCreatedSchema:
         """Создание нового товара."""
         logger.info(f"Создаем новый товар с данными: {item_data}")
-        response = self.send_request("POST", CREATE_URL, json=item_data)
+        response = self.send_request(HTTPMethod.POST, CREATE_URL, json=item_data)
         return validate_id_item_response(response.json())
 
     @allure.step("Удаляем товар с ID: {item_id}")
     def delete_item(self, item_id: int) -> bool:
         """Удаление товара по ID."""
         logger.info(f"Удаляем товар с ID: {item_id}")
-        response = self.send_request("DELETE", f"{DELETE_URL}{item_id}")
+        response = self.send_request(HTTPMethod.DELETE, f"{DELETE_URL}{item_id}")
         return response.status_code == 204
 
     @allure.step("Получаем список всех товаров")
     def get_all_items(self) -> ItemsListResponseSchema:
         """Получение списка всех товаров."""
         logger.info("Получаем список всех товаров.")
-        response = self.send_request("GET", GET_ALL_URL)
+        response = self.send_request(HTTPMethod.GET, GET_ALL_URL)
         return validate_get_all_items_response(response.json())
 
     @allure.step("Получаем информацию о товаре с ID: {item_id}")
     def get_item_by_id(self, item_id: int) -> ItemResponseSchema:
         """Получение товара по ID."""
         logger.info(f"Получаем информацию о товаре с ID: {item_id}")
-        response = self.send_request("GET", f"{GET_BY_ID_URL}{item_id}")
+        response = self.send_request(HTTPMethod.GET, f"{GET_BY_ID_URL}{item_id}")
         return validate_get_item_response(response.json())
     
     @allure.step("Получаем информацию о товаре с ID: {item_id}")
     def get_item_by_id_after_delete(self, item_id: int) -> bool:
         """Получение товара по ID."""
         logger.info(f"Получаем информацию о товаре с ID: {item_id}")
-        response = self.send_request("GET", f"{GET_BY_ID_URL}{item_id}")
+        response = self.send_request(HTTPMethod.GET, f"{GET_BY_ID_URL}{item_id}")
         return response.status_code == 204
 
     @allure.step("Обновляем информацию о товаре с ID: {item_id} данными: {update_data}")
     def update_item(self, item_id: int, update_data: Dict[str, Any]) -> bool:
         """Обновление товара по ID."""
         logger.info(f"Обновляем информацию о товаре с ID: {item_id}")
-        response = self.send_request("PATCH", f"{PATCH_URL}{item_id}", json=update_data)
+        response = self.send_request(HTTPMethod.PATCH, f"{PATCH_URL}{item_id}", json=update_data)
         return response.status_code == 204
     
     @allure.step("Получить информацию о статус коде")
     def get_status_code(self, item_id: int) -> int:
         """Получение статус кода для товара по ID."""
         logger.info(f"Получаем информацию о статус коде для товара с ID: {item_id}")
-        response = self.send_request("GET", f"{GET_BY_ID_URL}{item_id}")
+        response = self.send_request(HTTPMethod.GET, f"{GET_BY_ID_URL}{item_id}")
         return response.status_code

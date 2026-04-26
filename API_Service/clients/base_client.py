@@ -2,6 +2,7 @@ from typing import Any, Dict, Optional
 import requests
 import logging
 import allure
+import data.api_data.http_method_enum.py import HTTPMethod
 
 from config import BASE_URL, TIMEOUT_SECONDS, HEADERS
 
@@ -25,7 +26,7 @@ class BaseClient:
 
     def send_request(
         self,
-        method: str,
+        method: HTTPMethod,
         path: str,
         json: Optional[Dict[str, Any]] = None,
     ) -> requests.Response:
@@ -35,7 +36,7 @@ class BaseClient:
             logger.info(f"Отправляем {method} запрос на URL: {url} с данными: {json}")
             try:
                 return self.session.request(
-                    method=method,
+                    method=method.value,
                     url=url,
                     json=json,
                     timeout=self.timeout,
