@@ -15,7 +15,7 @@ class TestGetItemEndpoint:
         """Создание не существующего ID для тестирования получения объекта по несуществующему ID."""
         logger.info("Получаем все ID существующих объектов для создания несуществующего ID. То есть просто +1 к максимальному ID.")
         objects = item_client.get_all_items()
-        existing_ids = [obj.id for obj in objects]
+        existing_ids = [obj.id for obj in objects.entity]
         non_existent_id = max(existing_ids) + 1 if existing_ids else 1
         return non_existent_id
     
