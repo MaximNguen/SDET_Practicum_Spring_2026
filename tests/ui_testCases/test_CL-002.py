@@ -2,8 +2,8 @@ import logging
 import allure
 import pytest
 
-from data.urls import main_page_url
-from data.mock_data import search_value
+from data.ui_data.urls import main_page_url
+from data.ui_data.mock_data import search_value
 
 logger = logging.getLogger(__name__)
 

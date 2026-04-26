@@ -1,12 +1,11 @@
-from asyncio.log import logger
 import logging
 
 from selenium.webdriver.remote.webelement import WebElement
 import allure
 from typing import List
 
-from pages.base_page import BasePage
-from data.locators_search import SearchPageLocators as SPL
+from UI_Service.pages.base_page import BasePage
+from data.ui_data.locators_search import SearchPageLocators as SPL
 
 logger = logging.getLogger(__name__)
     

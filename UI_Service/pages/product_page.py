@@ -2,8 +2,8 @@ import logging
 import allure
 import random
 
-from pages.base_page import BasePage
-from data.locators_product import ProductPageLocators as PPL
+from UI_Service.pages.base_page import BasePage
+from data.ui_data.locators_product import ProductPageLocators as PPL
 
 logger = logging.getLogger(__name__)
 

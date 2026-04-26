@@ -6,7 +6,6 @@ allure-results
 allure-report
 *.log
 *.xml
-*.json
 *.html
 *.csv
 *.sqlite
@@ -15,3 +14,4 @@ allure-report
 *.pyd
 .pytest_cache
 .coverage
+api-service-external

@@ -20,9 +20,9 @@ class WaitHelpers:
                 EC.visibility_of_element_located(locator)
             )
             return element
-        except TimeoutException:
+        except TimeoutException as e:
             logger.error(
-                f"Элемент с локатором {locator} не найден в течение {timeout} секунд."
+                f"Элемент с локатором {locator} не найден в течение {timeout} секунд. - {e}"
             )
 
     def wait_for_clickable(self, locator, timeout=10):
@@ -32,9 +32,9 @@ class WaitHelpers:
                 EC.element_to_be_clickable(locator)
             )
             return element
-        except TimeoutException:
+        except TimeoutException as e:
             logger.error(
-                f"Элемент с локатором {locator} не кликабельный в течение {timeout} секунд."
+                f"Элемент с локатором {locator} не кликабельный в течение {timeout} секунд. - {e}"
             )
 
     def wait_until_url_change(self, timeout=10, previous_url=None):
@@ -43,8 +43,8 @@ class WaitHelpers:
         try:
             WebDriverWait(self.driver, timeout).until(EC.url_changes(base_url))
             return True
-        except TimeoutException:
-            logger.error(f"URL не изменился в течение {timeout} секунд.")
+        except TimeoutException as e:
+            logger.error(f"URL не изменился в течение {timeout} секунд. - {e}")
             return False
 
     def wait_for_page_load(self, timeout=3):
@@ -55,8 +55,8 @@ class WaitHelpers:
                 == "complete"
             )
             return True
-        except TimeoutException:
-            logger.error(f"Страница не загрузилась за {timeout} секунд.")
+        except TimeoutException as e:
+            logger.error(f"Страница не загрузилась за {timeout} секунд. - {e}")
             return False
 
     def wait_until_staleness_of(self, element, timeout=4):
@@ -64,8 +64,8 @@ class WaitHelpers:
         try:
             WebDriverWait(self.driver, timeout).until(EC.staleness_of(element))
             return True
-        except TimeoutException:
-            logger.error(f"Элемент не устарел в течение {timeout} секунд.")
+        except TimeoutException as e:
+            logger.error(f"Элемент не устарел в течение {timeout} секунд. - {e}")
             return False
         
     def wait_until_logo_available(self, locator, timeout=10):
@@ -75,6 +75,6 @@ class WaitHelpers:
                 EC.presence_of_element_located(locator)
             )
             return True
-        except TimeoutException:
-            logger.error(f"Логотип не появился в течение {timeout} секунд.")
+        except TimeoutException as e:
+            logger.error(f"Логотип не появился в течение {timeout} секунд. - {e}")
             return False

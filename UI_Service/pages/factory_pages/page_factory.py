@@ -1,11 +1,11 @@
 from selenium.webdriver.remote.webdriver import WebDriver
 import logging
 
-from pages.main_page import MainPage
-from pages.items_page import ItemPage
-from pages.search_page import SearchPage
-from pages.product_page import ProductPage
-from pages.cart_page import CartPage
+from UI_Service.pages.main_page import MainPage
+from UI_Service.pages.items_page import ItemPage
+from UI_Service.pages.search_page import SearchPage
+from UI_Service.pages.product_page import ProductPage
+from UI_Service.pages.cart_page import CartPage
 
 logger = logging.getLogger(__name__)
 
